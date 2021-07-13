@@ -13,6 +13,9 @@ org START_RAM
     charPtr:   dw 0
     
 TESTS_START:
+    call initKernel
+    _push 16
+    _store base
 
     .include "test-compiler.z80"
     .include "test-control.z80"

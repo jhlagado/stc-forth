@@ -1,15 +1,15 @@
-        call initKernel
-        ld HL,10
-        ld (var_base),HL
+    call initKernel
+    _push 10
+    _store base
 
-        TEST_SET_TEXT "1 2 ."
-        call INTERPRET
-        EXPECT 1, "1 2 . -> 2"
+    TEST_SET_TEXT "1 2 ."
+    call INTERPRET
+    EXPECT 1, "1 2 . -> 2"
 
-        TEST_SET_TEXT "1 2 +"
-        call INTERPRET
-        EXPECT 3, "interpret 1 + 2 = 3"
+    TEST_SET_TEXT "1 2 +"
+    call INTERPRET
+    EXPECT 3, "interpret 1 + 2 = 3"
 
-        TEST_SET_TEXT "5 2/"
-        call INTERPRET
-        EXPECT 2, "interpret 5/2"
+    TEST_SET_TEXT "5 2/"
+    call INTERPRET
+    EXPECT 2, "interpret 5/2"

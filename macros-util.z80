@@ -46,3 +46,9 @@
     ld (var_label),BC
     call drop
 .endm    
+
+.macro _compile, label
+    _push label
+    call callc
+.endm    
+

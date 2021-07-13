@@ -1,6 +1,6 @@
     call initKernel
-    ld HL,10
-    ld (var_base),HL
+    _push 10
+    _store base
 
     TEST_SET_TEXT "xyz"
     call CREATE

@@ -1,14 +1,14 @@
-        call initKernel
-        ld HL,16
-        ld (var_base),HL
+    call initKernel
+    _push 16
+    _store base
 
-        TEST_SET_TEXT "xyz "
-        _push $20
-        call WORD
-        call dup
-        call cat
-        EXPECT 3, "word length 'xyz'"
-        _fetch here
-        call minus
-        EXPECT 0, "word ptr HERE"
-    
+    TEST_SET_TEXT "xyz "
+    _push $20
+    call WORD
+    call dup
+    call cat
+    EXPECT 3, "word length 'xyz'"
+    _fetch here
+    call minus
+    EXPECT 0, "word ptr HERE"
+

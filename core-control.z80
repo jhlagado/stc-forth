@@ -46,24 +46,21 @@ CODE "execute", 0, execute
 ; FOR         ( -- a )
 ; Start a FOR-NEXT loop structure in a colon definition.
 CODE 'for',IMMED,for    
-    _push TOR
-    call callc
+    _compile TOR
     _fetch HERE
     ret
 
 ; NEXT        ( a -- )
 ; Terminate a FOR-NEXT loop structure.
 CODE 'next',IMMED,next    
-    _push doNext
-    call callc
+    _compile doNext
     call COMMA
     ret    
     
 ; AHEAD       ( -- A )
 ; Compile a forward branch instruction.
 CODE 'ahead',IMMED,ahead
-    _push branch
-    call callc
+    _compile branch
     _fetch here
     _push 0
     call comma
@@ -73,8 +70,7 @@ CODE 'ahead',IMMED,ahead
 ; Begin a conditional branch structure.
 
 CODE 'if',IMMED,iff
-    _push qbranch
-    call callc
+    _compile qbranch
     _fetch here
     _push 0
     call comma
@@ -114,8 +110,7 @@ CODE 'begin',IMMED,begin
 ; UNTIL       ( a -- )
 ; Terminate a BEGIN-UNTIL indefinite loop structure.
 CODE 'until',IMMED,until
-    _push qbranch
-    call callc
+    _compile qbranch
     call comma
     ret
 
