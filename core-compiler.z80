@@ -8,13 +8,13 @@ CODE 'COMPILE',0,compi
     _push 3
     call plus
     ld HL,BC
+    call drop
     jp (HL)
 
 ;   LITERAL     ( w -- )
 ;               Compile tos to code dictionary as an integer literal.
 CODE 'LITERAL',IMMED,LITER
-    call compi
-    dw dolit
+    _compile dolit
     call comma
     ret
 
