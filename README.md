@@ -3,7 +3,7 @@
 ## import this repo into asm80.com
 
 - click `Import repo from GitHub` button
-- paste `https://github.com/jhlagado/SerMon` into the`Enter https GitHub link` text field.
+- paste `https://github.com/jhlagado/stc-forth` into the`Enter https GitHub link` text field.
 
 ## to run tests
 
