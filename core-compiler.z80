@@ -80,3 +80,26 @@ CODE ";",IMMED,semicolon
     call lbrac                              ; go back to immediate mode.
     ret                                
 
+CODE ":noname",0,colonNoName
+    _fetch here                             ; TOS = here
+    call rbrac                              ; go into compile mode.
+    ret                                     ; return from the function.
+
+CODE "does>", IMMED, does                   ; --
+    _compile xdoes
+    _compile dodoes                            
+    ret
+xdoes:                                      ; --
+    call rfrom
+    _fetch latest 
+    call getBody
+    call callc
+    ret
+dodoes:                                     ; -- a-addr
+    call dup
+    pop HL                                  ; parameter field address
+    pop BC
+    push HL
+    ret
+    
+
