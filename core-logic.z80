@@ -1,0 +1,119 @@
+;   0<          ( n -- t )
+;               Return true if n is negative.
+CODE '0<',0,ZLESS
+	SLA B	; sign bit -> cy flag
+	SBC	A,A	; propagate cy through A
+	LD	B,A	; put 0000 or FFFF in TOS
+	LD	C,A
+	ret
+
+; and    x1 x2 -- x3            logical and
+CODE "and",0,ANDD	        ; bitwise and
+    _pop HL
+    ld A,B
+    AND H
+    ld B,A
+    ld A,C
+    AND L
+    ld C,A
+    ret
+
+; OR    x1 x2 -- x3             logical OR
+CODE "or",0,ORR	            ; bitwise OR
+    _pop HL
+    ld A,B
+    or H
+    ld B,A
+    ld A,C
+    or L
+    ld C,A
+    ret
+
+; xor    x1 x2 -- x3            logical xor
+CODE "xor",0,XORR	        ; bitwise xor
+    _pop HL
+    ld A,B
+    xor H
+    ld B,A
+    ld A,C
+    xor L
+    ld C,A
+    ret
+
+; INVERT x1 -- x2               ; bitwise complement
+CODE "not",0,INVER
+    _push -1 
+    call XORR 
+    ret
+
+; =      x1 x2 -- flag         test x1=x2
+CODE "=",0,EQUAL
+    call XORR
+    call isZero
+    jr EQU1
+    _push 0 
+    ret                             ;false flag
+EQU1:           
+    _push -1 
+    ret           ;true flag
+
+;   U<          ( u u -- t )
+;               Unsigned compare of top two items.
+CODE "U<",0,ULESS	        ; less than
+    call twodup
+    call XORR
+    call ZLESS
+    call isZero
+    jr z,ULES1
+    call SWAP
+    call DROP
+    call ZLESS
+    ret
+ULES1:          
+    call minus
+    call ZLESS
+    ret
+
+;   <           ( n1 n2 -- t )
+;               is less than
+CODE "<",0,LESS	        ; less than
+    call twodup
+	call XORR 
+    call isZero
+    jr z,LESS1
+	call DROP 
+	call ZLESS 
+	ret
+LESS1:		
+    call minus 
+    call ZLESS 
+    ret
+
+; >      n1 n2 -- flag          test n1 > n2
+CODE ">",0,GREATR	        ; less than
+    call swap
+    jr LESS
+
+; max   n1 n2 -- u                      maximum
+CODE "max",0,MAX
+	call twodup 
+	call LESS 
+    call isZero
+    jr z,MAX1
+    call SWAP
+MAX1:		
+    call DROP
+    ret
+
+; min   n1 n2 -- u                      minimum
+CODE "min",0,MIN
+	call twodup 
+    call SWAP
+    call LESS
+    call isZero
+    jr z,MIN1
+    call SWAP
+MIN1:           
+    call DROP
+    ret
+    

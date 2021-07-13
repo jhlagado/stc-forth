@@ -1,0 +1,17 @@
+    call initKernel
+    _push 16
+    _store base
+
+    TEST_SET_TEXT ": x if 100 then ;"
+    call INTERPRET
+    TEST_SET_TEXT "1 x "
+    call INTERPRET
+    EXPECT $100, "if true $100"
+    TEST_SET_TEXT "200 0 x"
+    call INTERPRET
+    EXPECT $200, "if false $200"
+
+
+    TEST_SET_TEXT ": x 3 for aft 1+ then next ; 0 x "
+    call INTERPRET
+    EXPECT 3, "loop 3 times"

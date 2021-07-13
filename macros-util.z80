@@ -1,0 +1,48 @@
+; result: sets Z if zero
+; destroys: A
+.macro _compareZero, regHI, regLO          ; check if reg pair is zero
+    ld A, regLO
+    or regHI
+.endm
+
+; destroys: A
+.macro _unpackStr
+    ld A,(BC)                           ; a = len
+    inc BC                              ; TOS = ptr
+    call dup
+    ld C,A
+    ld B,0
+.endm
+
+; divide by 2
+.macro _div2                                 ; n -- n
+    srl B
+    rr C
+.endm
+
+.macro _isNegative
+    bit 7,A
+.endm
+
+.macro _onep
+    inc BC
+.endm
+
+.macro _twop
+    inc BC
+    inc BC
+.endm
+
+.macro _cellp
+    _twop
+.endm
+
+.macro _fetch, label
+    call dup
+    ld BC,(var_label)
+.endm
+
+.macro _store, label
+    ld (var_label),BC
+    call drop
+.endm    

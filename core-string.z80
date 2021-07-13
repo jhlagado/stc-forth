@@ -1,0 +1,47 @@
+;   COUNT       ( b -- b +n )
+;               Return count byte of a string and add 1 to byte address.
+
+CODE 'COUNT',0,COUNT
+    call dup
+    _onep
+    call swap
+    call cat
+    ret
+
+; destroys: HL
+compareStr:                             ; str1 str2 len -- (-1|0|1)
+    call dup
+    call isZero                         ; test for Count=0
+    ret z
+    call swap                           ; str1 len str2
+    _pop HL                             ; str1 len      HL = str2 c = len 
+    ld A,C                              ; str1 len      HL = sr2 A = len
+    ex af,af'
+    ld A,B                              ; str1 len      HL = sr2 A:A' = len
+    call drop                           ; str1          HL = sr2 A = len 
+    push DE                             ; save DE       suspend forth
+    ld D,B                              
+    ld E,C                              ; str1          HL = sr2 DE = str1 B = len 
+    ld B,A
+    ex af,af'
+    ld C,A                              ; len
+compstr1:
+    ld A,(DE)
+    inc DE
+    cpi
+    jr z,compstr3                   ; char mismatch: exit
+    dec HL                      ; point at mismatch char
+    cp (HL)                     ; set carry if char1 < char2
+    jr nc,compstr2
+    ld BC, -1               ; -1 str1 < str2
+    jr compstr4
+compstr2:
+    ld BC, 1                ; 1 str1 > str2
+    jr compstr4
+compstr3:
+    jp pe,compstr1
+    ld BC,0                             ; 0 no mismatch found
+compstr4:
+    pop DE                              ; restore DE resume forth
+    ret
+

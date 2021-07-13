@@ -1,0 +1,95 @@
+; read a word from input stream
+; char "<chars>ccc<char>" -- c-addr 
+; Skip leading delimiters. Parse characters ccc delimited by char. 
+CODE "word",0,word
+    call tor                                ; save delim
+    _fetch here                             ; ptr
+    _onep                                   ; ptr'
+    _push $40                               ; ptr' maxlen
+    call rfrom                              ; ptr' maxlen delim
+    call parseWord                          ; ptr' len
+    call swap                               ; len ptr'
+    call onem                               ; len ptr
+    call dup
+    call tor                                ; len ptr r: ptr
+    call cstore
+    call rfrom                              ; ptr
+    ret                                     
+
+; ptr maxlen delim -- ptr len
+parseWord:                                  ; -- ptr len
+    call dup                                ; dup delim
+    call skipDelims
+    jp wordRead
+
+skipDelims:                                 ; delim -- char
+skipd1:
+    call key                                ; get next key, returned in A
+    ld A,C
+    call drop
+
+    bit 7, A                                ; check end of input, used by tests
+    jr z,skipd2
+    ld A,0
+    jr skipd7
+skipd2:
+    cp $5C                                  ; \ start of a comment?
+    jr nz,skipd5                            ; if yes skip to end of line
+skipd3:
+    call key                                ; get next key, returned in A
+    ld A,C
+    cp "\r"                                 ; end of line yet?
+    jr z,skipd4
+    cp "\n"                                 ; end of line yet?
+skipd4:
+    jr nz,skipd3
+    jr skipd6
+skipd5:
+    cp C                                    ; = space?
+    jr z,skipd6
+    cp " "                                  ; < space?
+    jr c,skipd6
+    jr skipd7
+
+skipd6:
+    jr skipd1
+skipd7:
+    _setTOS 0,A                             ; TOS = char
+    ret
+
+wordRead:                                   ; ptr maxlen delim char -- ptr len
+    ld A,C                                  ; A = char
+    ex AF,AF'                               ; AA = char
+    call drop                               ; ptr maxlen delim  ; A' = char
+    ld A,C                                  ; ptr maxlen delim  ; A = delim A' = char
+    call drop                               ; ptr maxlen        ; A = delim A' = char
+    ld B,A                                  ; ptr delim:maxlen  ; A = delim A' = char
+    ex af,af'                               ; ptr del:max       ; A = char
+    or A                                    ; A = 0 ?
+    jr nz,wordRd1
+    ld BC,0                                 ; ptr len           ; where len = 0
+    ret
+wordRd1:
+    call over                               ; ptr del:max ptr   ; A = char
+    _pop HL                                 ; ptr del:max       ; HL = ptr A = char
+wordRd2:
+    ld (HL),A                               ; write char to lineBuf
+    inc HL                                  ; ptr del:max       ; HL = ptr'
+    push HL
+    call KEY                                ; ptr del:max key
+    pop HL
+    ld A,C                                  ; ptr del:max key   ; A = key    
+    call drop                               ; ptr del:max       ; A = key B = delim C = maxlen
+    cp B                                    ; key = delim?
+    jr z,wordRd3
+    cp " "                                  ; < space? i.e. control chars
+    jr c,wordRd3
+    dec C                                   ; maxlen--
+    jr nz, wordRd2                          ; jump loop
+wordRd3:
+    call drop                               ; ptr
+    or A
+    sbc HL, BC                              ; ptr' - ptr
+    _push  HL                               ; ptr len
+    ret
+

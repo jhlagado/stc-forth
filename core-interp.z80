@@ -1,0 +1,78 @@
+repl:
+    ld DE, dataStack
+    jp interpret
+
+interpret:
+    _push wordBuf1                  ; str
+    _push $40                       ; str maxlen
+    _push $20                       ; str maxlen delim
+    call parseWord                  ; str len
+    call dup  
+    call isZero                     ; str len len
+    jr z,interpret2                 ; str len
+    _fetch state
+    call isZero
+    jr z,interpret1                 ; str len
+    call compileWord      
+    jr interpret
+interpret1:
+    call interpWord                 ; num?
+    jr interpret
+interpret2:
+    jp twodrop                      ; cleanup and return
+
+interpWord:                                 ; str len -- num?
+    call twodup                     ; str len str len
+    call find                       ; str len ptrOrNull
+    call dup                        ; str len ptrOrNull ptrOrNull
+    call isZero                     ; str len ptrOrNull
+    jr z,interpNum
+    _twonip                     ; ptr
+interpWord2:
+    call getBody                    ; ptr'
+    call execute                    ; ?
+    ret
+
+interpNum:
+    call drop                       ; str len
+    call toNumber                   ; num err
+    call isZero
+    ret z
+interpNum2:
+    call drop                       ; --
+    _pushPStr "NOT FOUND!\r\n"
+    call printPStr                  ; --
+    ret
+
+compileWord:
+    call twodup                     ; str len str len
+    call find                       ; str len ptrOrNull
+    call dup                        ; str len ptrOrNull ptrOrNull
+    call isZero                     ; str len ptrOrNull
+    jr z,compileNum
+    _twonip                           ; ptr
+    call dup                        ; ptr ptr
+    _cellp                          ; ptr pflags
+    call cat
+    _push IMMED
+    call ANDD
+    call isZero
+    jr nz,interpWord2
+    call getBody                    ; ptr'
+    call callc                      ; compile call
+    ret
+
+compileNum:
+    call drop                       ; str len
+    call toNumber                   ; num err
+    call isZero
+    jr z,compileNum2
+    jr interpNum2
+
+compileNum2:
+    _push dolit
+    call callc
+    call comma
+    ret
+    
+    

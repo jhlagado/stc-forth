@@ -1,0 +1,23 @@
+backLink: .set 0                            ; assembler var, link to previous word
+
+.macro CODE, name, flags, label
+HEADER_label:
+    DW backLink                             ; link to previous word
+backLink: .set HEADER_label
+    DB flags                                ; flags
+    .pstr name                              ; name string
+    ; .align 2                                ; adds a null byte if string length odd
+label:                                      ; body
+.endm
+
+.macro CONST, name, flags, label, value
+    CODE name, flags, label
+    call dup
+    ld BC, value
+    ret
+.endm
+
+.macro VAR, name, flags, label, variable
+    CONST name, flags, label, variable
+.endm
+

@@ -1,0 +1,78 @@
+initInput:
+    ld HL, linebuf
+    ld (lineBufStart), HL
+    ld (currkey), HL
+    ld (linebuftop), HL
+    ld HL, LINE_BUFSIZE
+    ld (lineBufSize), HL
+    ret
+
+CODE "KEY",0,KEY
+    push BC
+    ld HL, (currkey)
+    ld BC, (lineBufTop)
+    or A
+    sbc HL,BC                  ; exhausted the input lineBuf?
+    jr c,key1
+
+    call getLine
+    ld HL, lineBuf
+    ld (currkey), HL
+    or A
+    adc HL, BC              ; lineBuf+DE = lineBufTop
+    ld (lineBufTop),HL
+key1:
+    ld HL, (currkey)
+    ld A,(HL)               ; get next key from input lineBuf
+    inc HL
+    ld (currkey),HL         ; increment currkey
+    pop BC
+    call dup
+    _setTOS 0,A
+    ret
+
+; getline - input line of text ***
+; returns: BC = length - up to 255
+
+getLine:
+    _pushPStr "\r\n> "
+    call printPStr
+    ld HL, lineBuf
+    ld BC, 0
+getln1:    
+    call getc
+    cp $08
+    jr nz,getln2
+    call dup
+    call isZero
+    jr z,getln1
+    dec HL
+    dec BC
+    ld a, $08
+    call putc
+    ld A," "
+    call putc
+    ld A, $08
+    call putc
+    jr getln1
+getln2:
+    ld (HL), A
+    inc HL
+    inc BC
+    bit 7,a
+    jr nz,getln3
+    call putc
+getln3:
+    cp "\r"
+    jr z, getln4
+    cp "\n"
+    jr z, getln4
+    ld A, LINE_BUFSIZE-1
+    cp C
+    jr c, getln4
+    jr getln1
+getln4:
+    ld a, LINE_BUFSIZE-1
+    cp c
+    jr z,getln1
+    jp printCR

@@ -1,0 +1,84 @@
+cat:                                          ; ptr -- n
+    LD HL,BC
+    ld C,(HL)
+    ld B,0
+    ret
+
+storeChar:                                      ; c ptr --
+cstore:                                          ; n ptr --
+    ld HL,BC
+    call drop
+    ld (HL),C
+    jp drop
+
+at:                                          ; ptr -- n
+    push HL                                     ; needed?
+    LD HL,BC
+    ld C,(HL)
+    inc HL
+    ld B,(HL)
+    pop HL                                      ; needed?
+    ret
+
+store:                                          ; n ptr --
+    push HL                                     ; needed?
+    _pop HL
+    ld (HL),C
+    inc HL
+    ld (HL),B
+    call drop
+    pop HL                                      ; needed?
+    ret
+
+; +! ( n a -- )
+; Add n to the contents at address a.
+
+CODE '+!',0,pstor
+    call swap                                   ; a n
+    call over                                   ; a n a
+    call at                                     ; a n d
+    call plus                                   ; a n+d
+    call swap                                   ; n+d a
+    call store
+    ret
+
+; r@ -- n r: n -- n
+rat:                                          
+    call rfrom
+    push BC
+    ret
+
+; , ( w -- )
+; Compile an integer into the code dictionary.
+CODE ",",0,COMMA
+    call COMMA1                                   
+    _cellp                                      ; here+2
+    _store here                                 ; here+2 &here
+    ret                                                     
+CODE "c,",0,CCOMMA
+    call COMMA1                                   
+    _onep                                       ; here+1
+    _store here                                 ; here+1 &here
+    ret                                                     
+COMMA1:
+    _fetch here                                 ; w here
+    call dup                                 
+    call tor                                    ; w here r: here
+    call store                                  
+    call rfrom                                  ; here                                  
+    ret
+
+; call,       ( adr -- )
+; Assemble a call instruction to adr
+CODE 'call,',0,CALLC
+    _push CALL_OPCODE
+    call ccomma
+    call comma
+    ret
+
+; ALLOT       ( n -- )
+; Allocate n bytes to the code dictionary.
+CODE "allot",0,allot               ;
+    call here 
+    call pstor                   ; adds n to here
+    ret

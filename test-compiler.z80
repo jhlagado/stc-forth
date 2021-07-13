@@ -1,0 +1,21 @@
+    call initKernel
+    ld HL,10
+    ld (var_base),HL
+
+    TEST_SET_TEXT "xyz"
+    call CREATE
+    call LATEST
+    call AT
+    EXPECT START_USER, "create xyz latest"
+    call HERE
+    call AT
+    EXPECT START_USER + 10, "create xyz here"
+    
+    TEST_SET_TEXT ": x 123 ; x"
+    call INTERPRET
+    EXPECT 123, "interpret x = 123"
+
+    TEST_SET_TEXT ": x 1 1+ ; x"
+    call INTERPRET
+    EXPECT 2, "interpret 1 1+ = 2"
+

@@ -1,0 +1,145 @@
+CODE "dolit", 0, dolit                         
+    call dup
+    pop HL
+    ld C,(HL)
+    inc HL
+    ld B,(HL)
+    inc HL
+    jp (HL)
+
+CODE ">r", 0, tor
+    pop HL
+    push BC
+    push HL
+    jp drop
+
+CODE "r>", 0, rfrom
+    call dup
+    pop HL
+    pop BC
+    push HL
+    ret
+
+; duplicate top of data stack
+; x1 -- x1 x1
+CODE "dup", 0, dup
+    ex DE,HL
+    ld (HL), C                                ; PUSH register pair
+    inc HL
+    ld (HL), B
+    inc HL
+    ex DE,HL
+    ret
+
+; remove top of data stack
+; x1 x2 -- x1
+CODE "drop", 0, drop
+    ex DE,HL
+    dec HL
+    ld B,(HL)
+    dec HL
+    ld C,(HL)
+    ex DE,HL
+    ret
+
+; SWAP	( x1 x2 -- x2 x1 )		
+; Exchange top two stack items.
+CODE "swap", 0, swap
+    ld H,D
+    ld L,E
+    dec HL
+    ld A,B
+    ld B,(HL)
+    ld (HL),A
+    dec HL
+    ld A,C
+    ld C,(HL)
+    ld (HL),A
+    ret
+
+
+; duplicate second from top of data stack
+; x1 x2 -- x1 x2 x1
+CODE "over", 0, over
+    ld H,D
+    ld L,E
+    call dup
+    dec HL
+    ld B,(HL)
+    dec HL
+    ld C,(HL)
+    ret
+
+; NIP 	( n1 n2 -- n2 ) 		
+; Discard the second stack item.
+
+CODE "nip", 0, nip
+    dec DE
+    dec DE
+    ret
+
+CODE "tuck", 0, tuck                                ; x y -- y x y
+    call swap
+    jp over
+
+CODE "rot", 0, rot
+    call tor 
+    call swap
+    call rfrom
+    jp swap
+
+CODE "2dup", 0, twodup                                           ; xa xb -- xa xb xa xb
+    call over
+    jp over
+
+CODE "2drop", 0, twodrop                                          ; x x --   ?????????????????
+    _nip
+    jp drop
+
+; 2SWAP	( x1 x2 x3 x4 -- x3 x4 x1 x2 )	
+; Exchange the top two cell pairs.
+
+CODE "2swap", 0, twoswap
+    call rot
+    call tor
+    call rot
+    call rfrom
+    ret
+
+;   2OVER	( x1 x2 x3 x4 -- x1 x2 x3 x4 x1 x2 )	  \ CORE
+;	Copy cell pair x1 x2 to the top of the stack.
+    
+CODE "2over", 0, twoover
+    call tor
+    call tor
+    call twodup
+    call rfrom
+    call rfrom
+    jp twoswap
+
+; 2NIP 	( n1 n2 n3 -- n3 ) 		
+; Discard the second stack item.
+
+CODE "2nip", 0, twonip
+    _nip
+    _nip
+    ret
+
+; depth of data stack
+; destroys: HL
+CODE "depth", 0, depth                       ; -- n
+    push DE
+    pop HL
+    call dup
+    ld BC,dataStack
+    or A
+    sbc HL,BC
+    ld BC,HL
+    _div2
+    ret
+
+isZero:                                         ; n -- ?  ; this is wrong, should leave boolean
+    _compareZero B,C
+    jp drop
+
+

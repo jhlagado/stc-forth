@@ -1,0 +1,82 @@
+; COMPILE     ( -- )
+; Compile the next address in colon list to code dictionary.
+CODE 'COMPILE',0,compi
+    call rfrom
+    call dup
+    call at
+    call callc                              ;compile call to address
+    _push 3
+    call plus
+    ld HL,BC
+    jp (HL)
+
+;   LITERAL     ( w -- )
+;               Compile tos to code dictionary as an integer literal.
+CODE 'LITERAL',IMMED,LITER
+    call compi
+    dw dolit
+    call comma
+    ret
+
+; CREATE ( -- ; <string> )
+; Compile a new array entry without allocating code space.
+CODE "create",0,create             
+    _fetch here                               ; &here
+    _fetch latest                           ; here latest
+    call comma                              ; write value current value of latest to link field (inc here by 2)
+    _store latest                           ; store header to latest 
+    _push 0                                 ; 0
+    call ccomma                             ; write 0 to flags field (inc here by 1)
+    call bl                                 ; delim
+    call word                               ; read word token into name field at here
+    call cat                                ; get name length
+    _onep                               ; inc by 1 for length byte
+    call allot                              ; allot len+1
+    _push jp_opcode 
+    call ccomma                             ; compile default behavious
+    _push create1 
+    call comma                              ; i.e. push addr of data area
+    ret
+create1:
+    call rfrom                              ; push onto stack
+    ret
+    
+; hidden addr --
+; hides word pointed to by addr
+hidden:
+    _cellp                                  ; pflags
+    call dup                                ; pflags pflags
+    call at                                 ; pflags flags
+    _push HIDE                              ; pflags flags HIDE
+    call xorr                               ; pflags flags^HIDE
+    call swap                               ; flags^HIDE pflags
+    call store
+    ret
+
+CODE ":",0,colon
+    call create                             ; create the dictionary entry / header
+    _push -3
+    call allot                              ; erase jump instruction left by create 
+    _fetch latest
+    call hidden                             ; make the word hidden
+    call rbrac                              ; go into compile mode.
+    ret                                     
+
+CODE "[",IMMED,lbrac
+	ld HL, FALSE
+	ld (VAR_STATE), HL	; Set STATE to 0.
+    ret
+
+CODE "]",0,rbrac
+	ld HL, TRUE
+	ld (VAR_STATE), HL	; Set STATE to 1.
+    ret
+    
+CODE ";",IMMED,semicolon
+    _push RET_OPCODE 
+    call ccomma                             ; compile ret
+    _fetch latest                           ; get latest defined word
+    call hidden                             ; toggle hidden flag -- unhide 
+    call lbrac                              ; go back to immediate mode.
+    ret                                
+

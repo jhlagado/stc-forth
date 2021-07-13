@@ -1,0 +1,9 @@
+CONST "rp0", 0, rz, ret_stack
+CONST "true", 0, TRUE,-1
+CONST "false", 0, FALSE,0
+CONST "bl", 0, bl, $20
+
+VAR "base",0, base, var_base
+VAR "here", 0, here, var_here
+VAR "latest", 0, latest, var_latest
+VAR "state",0, state, var_state

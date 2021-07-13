@@ -1,0 +1,31 @@
+.engine mycomputer
+
+TESTMODE equ 1
+    
+    .include "header-main.z80"
+    
+    jp TESTS_START
+    
+org START_RAM
+    
+    .include "variables.z80"
+    ; used for mocking getc
+    charPtr:   dw 0
+    
+TESTS_START:
+
+    .include "test-compiler.z80"
+    .include "test-control.z80"
+    .include "test-math.z80"
+    .include "test-misc.z80"
+    .include "test-parse.z80"
+    .include "test-stack.z80"
+    
+    _pushPStr "\r\nDone! \r\n"
+    call printPStr
+    halt
+    
+FAILED:
+    .pstr "Failed: "
+
+START_USER:

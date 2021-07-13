@@ -1,0 +1,53 @@
+        call initKernel
+        ld HL,16
+        ld (var_base),HL
+
+        _push 1234
+        expect 1234, "lit 1234"
+
+        ; call depth
+        ; expect 0, " depth"
+    
+        _push 1
+        _push 2
+        _push 3
+        call swap
+        expect 2, "swap 2"
+        expect 3, "swap 3"
+        expect 1, "swap 1"
+    
+        _push $AAAA
+        _push $BBBB
+        call over
+        expect $AAAA, "over $AAAA"
+        expect $BBBB, "over $BBBB"
+        expect $AAAA, "over $AAAA"
+    
+        _push 1001
+        _push 1002
+        call twodup
+        expect 1002, "twodup 1002"
+        expect 1001, "twodup 1001"
+        expect 1002, "twodup 1002"
+        expect 1001, "twodup 1001"
+    
+        _push $AAAA
+        _push $BBBB
+        _push $CCCC
+        _push $DDDD
+        call twoover
+        expect $BBBB, "twoover $BBBB"
+        expect $AAAA, "twoover $AAAA"
+        expect $DDDD, "twoover $DDDD"
+        expect $CCCC, "twoover $CCCC"
+        expect $BBBB, "twoover $BBBB"
+        expect $AAAA, "twoover $AAAA"
+    
+        _push $AAAA
+        _push $BBBB
+        _push $CCCC
+        _push $DDDD
+        _twonip
+        expect $DDDD, "twoover $DDDD"
+        expect $AAAA, "twoover $AAAA"
+    

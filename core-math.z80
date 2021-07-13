@@ -1,0 +1,121 @@
+; num -- -num
+CODE "negate", 0, negate                         
+    ld HL,0
+    or A
+    sbc HL,BC
+    ld BC,HL
+    ret
+
+; dividend divisor -- quotient remainder
+CODE "/", 0, divide                         
+    _pop HL  
+    push DE
+    ex DE,HL
+    ld HL,0
+
+    ld A,B
+    call divid1
+    ld B,A
+
+    ld A,C
+    ld C,B
+    call divid1
+    ld B,C
+    ld C,A
+
+    pop DE
+    _push HL 
+    ret
+
+divid1:
+    ld B,8
+divid2:
+    rla
+    adc HL,HL
+    sbc HL,DE
+    jr nc,divid3
+    add HL,DE
+divid3:
+    djnz divid2
+    rla
+    cpl
+    ret
+
+
+; u1 u2 -- plo phi
+CODE "U*", 0, uMultiply                         
+    _pop HL                             ; HL = u2, BC = u1
+    push DE                             ; save DE .... suspend forth   
+    ex DE,HL                            ; DE = u2                
+    ld HL,0                             ; HLDE = 0 0 u2hi u2lo
+    ld A,17                             ; loop counter
+    or A                                ; clear carry
+umul1:
+    rr H
+    rr L
+    rr D
+    rr E
+    jr nc,umul2
+    add HL,BC
+umul2:
+    dec A
+    jr nz, umul1
+    ld B,D
+    ld C,E
+    pop DE                              ; restore DE  resume forth
+    _push HL
+    ret
+
+CODE "+", 0, plus                         
+    push HL
+    _pop HL
+    add HL,BC
+    ld BC,HL
+    pop HL
+    ret
+
+CODE "-", 0, minus                         
+    push HL
+    call swap
+    _pop HL
+    or a
+    sbc HL,BC
+    ld BC,HL
+    pop HL
+    ret
+
+CODE "1+",0,onep
+    inc BC
+    ret
+
+CODE "1-",0,onem
+    dec BC
+    ret
+
+CODE "cells", 0, cells                         
+CODE "2*", 0, twoStar                         
+    SLA C
+    RL	B            
+    ret
+    
+CODE "2/",0,twoSlash
+    SRA B
+    RR	C
+    ret
+    
+CODE "2+",0,twop
+CODE "cell+",0,cellp
+    inc BC
+    inc BC
+    ret
+
+CODE "2-",0,twom
+    dec BC
+    dec BC
+    ret
+
+carryToBool:
+    ld BC,0
+    ret nc
+    dec BC
+    ret

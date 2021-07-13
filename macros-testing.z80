@@ -1,0 +1,43 @@
+.macro TEST_SET_TEXT, s1
+    ld HL, (lineBufStart)
+    ld (lineBufTop),HL
+    ld (currkey),HL
+    ld HL, tst_text%%M
+    ld (charPtr), HL
+    jr skip%%M
+tst_text%%M:
+        db s1,"\r\n",-1,"\r\n"
+skip%%M:
+.endm
+
+.macro expect, expectVal, failTxt
+    call dup
+    call printNum
+    _push expectVal
+    call dup
+    call printNum
+    _pop HL
+    or A
+    sbc HL,BC
+    call drop
+    _compareZero H,L
+    jp z, tf_done%%M            
+    _push FAILED
+    call printPStr
+    _push  te_fail%%M
+    call printPStr
+    halt
+    jr skip%%M
+te_fail%%M:
+        .pstr failTxt
+skip%%M:    
+tf_done%%M:
+    call printCR
+.endm
+
+.macro _printDepth
+    call depth
+    call printNum
+    halt
+.endm
+

@@ -1,0 +1,145 @@
+; next ( -- ) ( r: idx ret ) followed by address of loop start
+; Run time code for the single index loop.
+; r> r> dup if 1 - >r @ >r exit then drop cell+ >r ;
+doNext:         
+    call rfrom          ; ret ( r: idx )   
+    call rfrom          ; ret idx 
+    call dup            ; ret idx idx
+    call isZero     
+    jr z,doNext1    
+    dec BC              ; ret idx'
+    call tor            ; ret (r: idx')
+    call at             ; ret' (r: idx')
+    ld HL,BC
+    call drop
+    jp (HL)
+doNext1:
+    call drop           ; ret
+    ld HL,2
+    add HL,BC
+    call drop
+    jp (HL)
+
+CODE "?branch", 0, qbranch           
+    call isZero
+    jr z, branch
+    pop HL
+    inc HL
+    inc HL
+    jp (HL)
+
+CODE "branch", 0, branch           
+    call dup
+    pop HL
+    ld C,(HL)
+    inc HL
+    ld B,(HL)
+    ld HL,BC
+    call drop
+    jp (HL)
+
+CODE "execute", 0, execute
+    ld HL,BC
+    call drop
+    jp (HL)
+
+; FOR         ( -- a )
+; Start a FOR-NEXT loop structure in a colon definition.
+CODE 'for',IMMED,for    
+    _push TOR
+    call callc
+    _fetch HERE
+    ret
+
+; NEXT        ( a -- )
+; Terminate a FOR-NEXT loop structure.
+CODE 'next',IMMED,next    
+    _push doNext
+    call callc
+    call COMMA
+    ret    
+    
+; AHEAD       ( -- A )
+; Compile a forward branch instruction.
+CODE 'ahead',IMMED,ahead
+    _push branch
+    call callc
+    _fetch here
+    _push 0
+    call comma
+    ret
+
+; IF          ( -- A )
+; Begin a conditional branch structure.
+
+CODE 'if',IMMED,iff
+    _push qbranch
+    call callc
+    _fetch here
+    _push 0
+    call comma
+    ret
+
+; ELSE        ( A -- A )
+; Start the false clause in an IF-ELSE-THEN structure.
+CODE 'else',IMMED,else
+    call ahead
+    call swap
+    call thenn
+    ret
+
+; THEN        ( A -- )
+; Terminate a conditional branch structure.
+CODE 'then',IMMED,thenn
+    _fetch here
+    call swap
+    call store
+    ret
+
+; AFT         ( a -- a A )
+; Jump to THEN in a FOR-AFT-THEN-NEXT loop the 1st time through.
+CODE 'aft',IMMED,aft
+    call drop
+    call ahead
+    call begin
+    call swap
+    ret
+
+; BEGIN       ( -- a )
+; Start an infinite or indefinite loop structure.
+CODE 'begin',IMMED,begin
+    _fetch HERE
+    ret
+
+; UNTIL       ( a -- )
+; Terminate a BEGIN-UNTIL indefinite loop structure.
+CODE 'until',IMMED,until
+    _push qbranch
+    call callc
+    call comma
+    ret
+
+; AGAIN       ( a -- )
+; Terminate a BEGIN-AGAIN infinite loop structure.
+
+CODE 'again',IMMED,again
+    _push jp_opcode
+    call ccomma
+    call comma
+    ret
+
+; REPEAT      ( A a -- )
+; Terminate a BEGIN-WHILE-REPEAT indefinite loop.
+CODE 'repeat',IMMED,repeat
+    call again
+    _fetch here
+    call swap
+    call store
+    ret
+
+; WHILE       ( a -- A a )
+; Conditional branch out of a BEGIN-WHILE-REPEAT loop.
+CODE 'while',IMMED,while
+    call iff
+    call swap
+    ret

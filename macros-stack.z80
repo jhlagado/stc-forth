@@ -1,0 +1,53 @@
+.macro _getTOS, regHI, regLO                  ; x -- x ; rp = x
+    ld regLO, C
+    ld regHI, B                             ; move TOS reg pair into register pair
+.endm
+
+.macro _setTOS, regHI, regLO                  ; rp = x ; y -- x
+    ld C, regLO
+    ld B, regHI                             ; move TOS reg pair into register pair
+.endm
+
+.macro _push, src                           ; put src (value or memory) location on top of param stack
+    call dup
+    ld BC, src
+.endm
+
+.macro _pop, dest                           ; put top of param stack into dest
+    ld dest, BC
+    call drop
+.endm
+
+.macro _nip
+    dec DE
+    dec DE
+.endm
+
+.macro _twonip
+    _nip
+    _nip
+.endm
+
+.macro _pushChar, char
+    call dup
+    _setTOS 0,char
+.endm
+
+.macro _pushStr, str, len
+    _push tpt_text%%M
+    _push len
+    jr skip%%M
+tpt_text%%M:
+        db str
+skip%%M:
+.endm
+
+.macro _pushPStr, s1
+    _push tpt_text%%M
+    ld BC, tpt_text%%M
+    jr skip%%M
+tpt_text%%M:
+        .pstr s1
+skip%%M:
+.endm
+

@@ -1,0 +1,16 @@
+.engine mycomputer
+
+TESTMODE equ 0
+
+    .include "header-main.z80"
+
+    _pushPStr "Z80 Forth STC \r\n\r\n"
+    call printPStr
+    call repl
+    halt
+
+org START_RAM
+
+.include "variables.z80"
+
+START_USER:
