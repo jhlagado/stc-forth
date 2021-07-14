@@ -85,9 +85,45 @@ CODE ":noname",0,colonNoName
     call rbrac                              ; go into compile mode.
     ret                                     ; return from the function.
 
+
+; CODE "does>", 5, IMMED, does         ; --
+;     ENTER
+;     dw LIT, xdoes, comma
+;     dw LIT, dodoes
+;     dw here, AT
+;     dw LIT, call_opcode
+;     dw over, cstore
+;     dw ONEP, STORE
+;     dw LIT, 3, allot
+;     EXIT
+
+; dodoes:             ; -- a-addr
+;     PDUP
+;     pop HL          ; parameter field address
+;     pop BC
+;     push HL
+;     NEXT
+
+; xdoes:                                  ; --
+;     ENTER
+;     dw rfrom
+;     dw latest, AT, tcfa
+;     dw LIT, call_opcode
+;     dw over, cstore
+;     dw ONEP, STORE
+;     EXIT
+
 CODE "does>", IMMED, does                   ; --
     _compile xdoes
-    _compile dodoes                            
+    _push dodoes                            
+    _fetch here
+    _push call_opcode
+    call over
+    call cstore
+    call onep
+    call store
+    _push 3
+    call allot
     ret
 xdoes:                                      ; --
     call rfrom

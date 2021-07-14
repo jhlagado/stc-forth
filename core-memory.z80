@@ -11,7 +11,7 @@ cstore:                                          ; n ptr --
     ld (HL),C
     jp drop
 
-at:                                          ; ptr -- n
+CODE '@',0,at                                          ; ptr -- n
     push HL                                     ; needed?
     LD HL,BC
     ld C,(HL)
