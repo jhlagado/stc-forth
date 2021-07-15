@@ -1,11 +1,12 @@
-printCR:                                ; --
+CODE "cr", 0, cr                            ; --
+printCR:                            
     ld A,"\r"
     call putc
     ld A,"\n"
     jp putc
 
 ; destroys: HL
-printStr:                               ; ptr len --
+printStr:                                   ; ptr len --
     call swap
     _pop HL
 printStr1:
@@ -16,7 +17,7 @@ printStr1:
         call dup
         call isZero
         jr nz,printStr1
-    jp drop                                   ; clear TOS
+    jp drop                                 ; clear TOS
 
 ; destroys: HL
 printPStr:                                  ; _ptr --
@@ -26,7 +27,8 @@ printPStr:                                  ; _ptr --
     jr printStr1
 
 ; destroys: HL
-CODE ".", 0, printNum                    ; num --
+CODE ".", 0, dot                            ; num --
+printNum:
     _push wordBuf1                          ; num ptr
     call swap                               ; ptr num
     call formatNum                          ; ptr len

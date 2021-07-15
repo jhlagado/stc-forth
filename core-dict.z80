@@ -1,5 +1,5 @@
-FIND:
-            _fetch latest                  ; ptr len headptr
+CODE "find",0,find                                        
+            _fetch latest                       ; ptr len headptr
 find1:
             call dup
             call isZero

@@ -100,12 +100,3 @@ xdoes:                                      ; --
     call onep
     call store                              ; rewrite with address of body after does>
     ret                                     ; return to caller of caller (terminate caller)
-
-; dodoes:                                     ; -- a-addr
-;     call dup
-;     pop HL                                  ; parameter field address
-;     pop BC
-;     push HL
-;     ret
-    
-

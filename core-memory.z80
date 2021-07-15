@@ -1,17 +1,18 @@
-cat:                                          ; ptr -- n
+CODE 'c@',0,cat                                 ; ptr -- n
     LD HL,BC
     ld C,(HL)
     ld B,0
     ret
 
-storeChar:                                      ; c ptr --
-cstore:                                          ; n ptr --
+CODE 'c!',0,cstore                              ; n ptr --
+
+storeChar:
     ld HL,BC
     call drop
     ld (HL),C
     jp drop
 
-CODE '@',0,at                                          ; ptr -- n
+CODE '@',0,at                                   ; ptr -- n
     push HL                                     ; needed?
     LD HL,BC
     ld C,(HL)
@@ -20,7 +21,7 @@ CODE '@',0,at                                          ; ptr -- n
     pop HL                                      ; needed?
     ret
 
-store:                                          ; n ptr --
+CODE '!',0,store                                          ; n ptr --
     push HL                                     ; needed?
     _pop HL
     ld (HL),C
@@ -43,7 +44,7 @@ CODE '+!',0,pstor
     ret
 
 ; r@ -- n r: n -- n
-rat:                                          
+CODE "r@",0,RAT                                          
     call rfrom
     push BC
     ret
@@ -55,11 +56,13 @@ CODE ",",0,COMMA
     _cellp                                      ; here+2
     _store here                                 ; here+2 &here
     ret                                                     
+
 CODE "c,",0,CCOMMA
     call COMMA1                                   
     _onep                                       ; here+1
     _store here                                 ; here+1 &here
     ret                                                     
+
 COMMA1:
     _fetch here                                 ; w here
     call dup                                 
