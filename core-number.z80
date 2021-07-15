@@ -7,7 +7,7 @@ formatNum:                              ; ptr num -- ptr len
         call swap                       ; ptr num1 ptr ptr
         _pushChar '-'                   ; ptr num1 ptr '-'
         call over                       ; ptr num1 ptr '-' ptr
-        call storeChar                  ; ptr num1 ptr
+        call cstore                     ; ptr num1 ptr
         inc BC                          ; ptr num1 ptr'
         call swap                       ; ptr ptr' num1
 formatNum1:    
@@ -33,7 +33,7 @@ formatNum11:
         call rfrom
         call digitToChar                ; ptr ptr' ascii
         call over                       ; ptr ptr' ascii ptr'
-        call storeChar                  ; ptr ptr'
+        call cstore                     ; ptr ptr'
         inc BC                          ; ptr ptr''
         ex AF,AF'
         dec A

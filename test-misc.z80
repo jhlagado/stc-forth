@@ -152,7 +152,7 @@ skipStr:
     call formatNum
     call dup
     expect 4, "-123 length 4"
-    call printCR
+    call cr
     call printStr
 
     ; unsigned Multiply

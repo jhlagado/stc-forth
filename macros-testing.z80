@@ -12,10 +12,10 @@ skip%%M:
 
 .macro expect, expectVal, failTxt
     call dup
-    call printNum
+    call dot
     _push expectVal
     call dup
-    call printNum
+    call dot
     _pop HL
     or A
     sbc HL,BC
@@ -32,12 +32,12 @@ te_fail%%M:
         .pstr failTxt
 skip%%M:    
 tf_done%%M:
-    call printCR
+    call cr
 .endm
 
 .macro _printDepth
     call depth
-    call printNum
+    call dot
     halt
 .endm
 

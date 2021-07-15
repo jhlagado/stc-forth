@@ -1,5 +1,4 @@
 CODE "cr", 0, cr                            ; --
-printCR:                            
     ld A,"\r"
     call putc
     ld A,"\n"
@@ -28,7 +27,6 @@ printPStr:                                  ; _ptr --
 
 ; destroys: HL
 CODE ".", 0, dot                            ; num --
-printNum:
     _push wordBuf1                          ; num ptr
     call swap                               ; ptr num
     call formatNum                          ; ptr len

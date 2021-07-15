@@ -5,8 +5,6 @@ CODE 'c@',0,cat                                 ; ptr -- n
     ret
 
 CODE 'c!',0,cstore                              ; n ptr --
-
-storeChar:
     ld HL,BC
     call drop
     ld (HL),C
