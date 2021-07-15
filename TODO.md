@@ -2,7 +2,6 @@
 
 '
 [']
-DOES>
 COMPILE
 [COMPILE]
 RECURSE

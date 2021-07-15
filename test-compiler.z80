@@ -19,3 +19,11 @@
     call INTERPRET
     EXPECT 2, "interpret 1 1+ = 2"
 
+    TEST_SET_TEXT ": const create , does> @ ;"
+    call INTERPRET
+    TEST_SET_TEXT "100 const y"
+    call INTERPRET
+    TEST_SET_TEXT "y"
+    call INTERPRET
+    EXPECT 100, "expect 100"
+
