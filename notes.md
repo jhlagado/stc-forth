@@ -33,7 +33,6 @@ pop BC ; TOS = address of body of "y" (ie. rfrom)
 push HL ; something for NEXT to pop?  
 NEXT ; enters forth with HL = 2575
 
-
 ## in stc
 
 22C0: BC 0B ; backlink 0BBC ; word: const
@@ -49,4 +48,4 @@ NEXT ; enters forth with HL = 2575
 22DB: 00 ; flags
 22DC: 01 79 ; "y"
 22DE: C3 C4 00 ; default: create1
-22E1: 00 01 ; data $100 (because of base) 
+22E1: 00 01 ; data $100 (because of base)

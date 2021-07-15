@@ -85,57 +85,27 @@ CODE ":noname",0,colonNoName
     call rbrac                              ; go into compile mode.
     ret                                     ; return from the function.
 
-
-; CODE "does>", 5, IMMED, does         ; --
-;     ENTER
-;     dw LIT, xdoes, comma
-;     dw LIT, dodoes
-;     dw here, AT
-;     dw LIT, call_opcode
-;     dw over, cstore
-;     dw ONEP, STORE
-;     dw LIT, 3, allot
-;     EXIT
-
-; dodoes:             ; -- a-addr
-;     PDUP
-;     pop HL          ; parameter field address
-;     pop BC
-;     push HL
-;     NEXT
-
-; xdoes:                                  ; --
-;     ENTER
-;     dw rfrom
-;     dw latest, AT, tcfa
-;     dw LIT, call_opcode
-;     dw over, cstore
-;     dw ONEP, STORE
-;     EXIT
-
 CODE "does>", IMMED, does                   ; --
-    _compile xdoes
-    _push dodoes                            
-    _fetch here
+    _compile xdoes                          ; compile two calls 
+    _compile rfrom                          ; address of body of created word                            
+    ret
+
+xdoes:                                      ; --
+    call rfrom                              ; TOS = ptr to body after does> word
+    _fetch latest                           ; ptr to created word
+    call getBody                            
     _push call_opcode
     call over
     call cstore
     call onep
-    call store
-    _push 3
-    call allot
-    ret
-xdoes:                                      ; --
-    call rfrom
-    _fetch latest 
-    call getBody
-    call callc
-    ret
-dodoes:                                     ; -- a-addr
-    call dup
-    pop HL                                  ; parameter field address
-    pop BC
-    push HL
-    ret
+    call store                              ; rewrite with address of body after does>
+    ret                                     ; return to caller of caller (terminate caller)
+
+; dodoes:                                     ; -- a-addr
+;     call dup
+;     pop HL                                  ; parameter field address
+;     pop BC
+;     push HL
+;     ret
     
 
