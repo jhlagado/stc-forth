@@ -1,0 +1,260 @@
+CODE ":NONAME",0,NONAME
+    ret
+
+CODE "?DUP",0,QDUP
+    ret
+
+CODE ".(",0,DOTLBRAC
+    ret
+
+CODE ".R",0,DOTR
+    ret
+
+CODE "'",0,TICK
+    ret
+
+CODE "(",0,LPAREN
+    ret
+
+CODE "[']",0,XTICK
+    ret
+
+CODE "[compile]",0,XCOMPILE
+    ret
+
+CODE "*",0,STAR
+    ret
+
+CODE "*/",0,STARSLASH
+    ret
+
+CODE "*/MOD",0,STARSLASHMOD
+    ret
+
+CODE "/",0,SLASH
+    ret
+
+CODE "/MOD",0,SLASHMOD
+    ret
+
+CODE "#",0,HASH
+    ret
+
+CODE "#>",0,HASHGT
+    ret
+
+CODE "#S",0,HASHS
+    ret
+
+CODE "<",0,LT
+    ret
+
+CODE "<#",0,LTHASH
+    ret
+
+CODE "<>",0,NOTEQUAL
+    ret
+
+CODE ">",0,GT
+    ret
+
+CODE ">IN",0,GTIN
+    ret
+
+CODE "2!",0,TWOSTORE
+    ret
+
+CODE "2@",0,TWOAT
+    ret
+
+CODE "2>R",0,TWOTOR
+    ret
+
+CODE "2R@",0,TWORAT
+    ret
+
+CODE "2R>",0,TWORFROM
+    ret
+
+CODE "ABORT",0,ABORT
+    ret
+
+CODE "ABORT.Q",0,ABORTQ
+    ret
+
+CODE "ABS",0,ABS
+    ret
+
+CODE "ACCEPT",0,ACCEPT
+    ret
+
+CODE "BKSP",0,BKSP
+    ret
+
+CODE "CMOVE",0,CMOVE
+    ret
+
+CODE "COMPILE",0,COMPILE
+    ret
+
+CODE "CONSTANT",0,CONSTANT
+    ret
+
+CODE "DECIMAL",0,DECIMAL
+    ret
+
+CODE "DEFER",0,DEFER
+    ret
+
+CODE "DEFER!",0,DEFERSTORE
+    ret
+
+CODE "DEFER@",0,DEFERAT
+    ret
+
+CODE "DUMP",0,DUMP
+    ret
+
+CODE "EMIT",0,EMIT
+    ret
+
+CODE "ERASE",0,ERASE
+    ret
+
+CODE "EVALUATE",0,EVALUATE
+    ret
+
+CODE "EXIT",0,EXIT
+    ret
+
+CODE "FILL",0,FILL
+    ret
+
+CODE "FM/MOD",0,FMSLASHMOD
+    ret
+
+CODE "HEX",0,HEX
+    ret
+
+CODE "HOLD",0,HOLD
+    ret
+
+CODE "IMMEDIATE",0,IMMEDIATE
+    ret
+
+CODE "INVERT",0,INVERT
+    ret
+
+CODE "IS",0,IS
+    ret
+
+CODE "LITERAL",0,LITERAL
+    ret
+
+CODE "M*",0,MSTAR
+    ret
+
+CODE "MOD",0,MOD
+    ret
+
+CODE "MOVE",0,MOVE
+    ret
+
+CODE "PAD",0,PAD
+    ret
+
+CODE "PARSE",0,PARSE
+    ret
+
+CODE "PARSE-NAME",0,PARSENAME
+    ret
+
+CODE "PC!",0,PCSTORE
+    ret
+
+CODE "PC@",0,PCAT
+    ret
+
+CODE "PICK",0,PICK
+    ret
+
+CODE "POSTPONE",0,POSTPONE
+    ret
+
+CODE "QUIT",0,QUIT
+    ret
+
+CODE "RECURSE",0,RECURSE
+    ret
+
+CODE "ROLL",0,ROLL
+    ret
+
+CODE "RP!",0,RPSTORE
+    ret
+
+CODE "RP@",0,RPAT
+    ret
+
+CODE "S.Q",0,SQ
+    ret
+
+CODE "S>D",0,STOD
+    ret
+
+CODE "SEE",0,SEE
+    ret
+
+CODE "SIGN",0,SIGN
+    ret
+
+CODE "SP!",0,SPSTORE
+    ret
+
+CODE "SP@",0,SPAT
+    ret
+
+CODE "SPACE",0,SPACE
+    ret
+
+CODE "SPACES",0,SPACES
+    ret
+
+CODE "TO",0,TO
+    ret
+
+CODE "TYPE",0,TYPE
+    ret
+
+CODE "U.",0,UDOT
+    ret
+
+CODE "U.R",0,UDOTR
+    ret
+
+CODE "U>",0,UGT
+    ret
+
+CODE "UM*",0,UMSTAR
+    ret
+
+CODE "UM/MOD",0,UMSLASHMOD
+    ret
+
+CODE "UM+",0,UMPLUS
+    ret
+
+CODE "UNUSED",0,UNUSED
+    ret
+
+CODE "VALUE",0,VALUE
+    ret
+
+CODE "VARIABLE",0,VARIABLE
+    ret
+
+CODE "WITHIN",0,WITHIN
+    ret
+
+CODE "WORDS",0,WORDS
+    ret
