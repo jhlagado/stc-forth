@@ -24,8 +24,7 @@ TESTS_START:
     .include "test-parse.z80"
     .include "test-stack.z80"
     
-    _pushPStr "\r\nDone! \r\n"
-    call printPStr
+    _printString "\r\nDone! \r\n"
     halt
     
 FAILED:

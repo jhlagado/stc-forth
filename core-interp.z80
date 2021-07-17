@@ -40,8 +40,7 @@ interpNum:
     ret z
 interpNum2:
     call drop                       ; --
-    _pushPStr "NOT FOUND!\r\n"
-    call printPStr                  ; --
+    _printString "NOT FOUND!\r\n"
     ret
 
 compileWord:

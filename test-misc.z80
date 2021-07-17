@@ -88,35 +88,43 @@
     expect 2, "24 / 10 = 2"
 
     jr skipStr
-        s1: .cstr "string"
-        s2: .cstr "String2"
+    s1: .cstr "string"
+    s2: .cstr "String2"
+    ps1: .pstr "string"
+    ps2: .pstr "String2"
 skipStr:
-    _pushPStr s1
-    _pushPStr s2
+    _pushString ps1
+    call drop
+    _pushString ps2
+    call drop
     _push 7
 
     call compareStr
 
     expect -1, "s1 should be less than s2"
 
-    _pushPStr s2
-    _pushPStr s1
+    _pushString ps2
+    call drop
+    _pushString ps1
+    call drop
     _push 6
 
     call compareStr
 
     expect 1, "s1 should be greater than s2"
 
-    _pushPStr s1
-    _pushPStr s1
+    _pushPStr ps1
+    _pushPStr ps1
     _push 6
 
     call compareStr
 
     expect 0, "s1 should equal s1"
 
-    _pushPStr s1
-    _pushPStr s2
+    _pushString ps1
+    call drop
+    _pushString ps2
+    call drop
     _push 0
 
     call compareStr

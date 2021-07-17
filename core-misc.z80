@@ -1,22 +1,41 @@
+; (S")     -- c-addr u   run-time code for S"
+; is followed by a literal Pascal string
+XSQUOTE:
+    call rfrom          ; addr
+    call count          ; addr+1 len
+    call twodup         ; addr+1 len addr+1 len
+    call plus           ; addr+1 len addr+len+1
+    call tor            ; addr+1 len
+    ret                 ; TODO: optimise to LD HL,BC jp (HL)
+
 CODE ":NONAME",0,NONAME
     ret
 
 CODE "?DUP",0,QDUP
     ret
 
-CODE ".(",0,DOTLBRAC
+CODE ".(",0,DOTLPAREN
     ret
 
 CODE ".R",0,DOTR
     ret
 
 CODE "'",0,TICK
+    call bl
+    call word
+    call find
+    call isZero
+    ret z
+    _pushString "?" 
+    call abort
     ret
 
 CODE "(",0,LPAREN
     ret
 
-CODE "[']",0,XTICK
+CODE "[']",0,BRACKTICK
+    call tick               ; get xt of 'xxx'
+    call literal
     ret
 
 CODE "[compile]",0,XCOMPILE

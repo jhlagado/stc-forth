@@ -4,8 +4,7 @@ TESTMODE equ 0
 
     .include "header-main.z80"
 
-    _pushPStr "Z80 Forth STC \r\n\r\n"
-    call printPStr
+    _printString "Z80 Forth STC \r\n\r\n"
     call repl
     halt
 

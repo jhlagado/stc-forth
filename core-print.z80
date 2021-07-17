@@ -9,21 +9,23 @@ printStr:                                   ; ptr len --
     call swap
     _pop HL
 printStr1:
-        ld A,(HL)
-        call putc
-        inc HL
-        dec BC
-        call dup
-        call isZero
-        jr nz,printStr1
+    ld A,(HL)
+    call putc
+    inc HL
+    dec BC
+    call dup
+    call isZero
+    jr nz,printStr1
     jp drop                                 ; clear TOS
 
 ; destroys: HL
 printPStr:                                  ; _ptr --
-    LD HL,BC
-    _setTOS 0,(HL)
-    inc HL
-    jr printStr1
+    call count
+    jr printStr
+    ; LD HL,BC
+    ; _setTOS 0,(HL)
+    ; inc HL
+    ; jr printStr1
 
 ; destroys: HL
 CODE ".", 0, dot                            ; num --

@@ -35,8 +35,7 @@ key1:
 ; returns: BC = length - up to 255
 
 getLine:
-    _pushPStr "\r\n> "
-    call printPStr
+    _printString "\r\n> "
     ld HL, lineBuf
     ld BC, 0
 getln1:    

@@ -33,6 +33,11 @@
     _setTOS 0,char
 .endm
 
+.macro _pushString, s1
+    call XSQUOTE
+    .pstr s1
+.endm    
+
 .macro _pushStr, str, len
     _push tpt_text%%M
     _push len
