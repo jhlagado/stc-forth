@@ -1,279 +1,203 @@
-; (S")     -- c-addr u   run-time code for S"
-; is followed by a literal Pascal string
-XSQUOTE:
-    call rfrom          ; addr
-    call count          ; addr+1 len
-    call twodup         ; addr+1 len addr+1 len
-    call plus           ; addr+1 len addr+len+1
-    call tor            ; addr+1 len
-    ret                 ; TODO: optimise to LD HL,BC jp (HL)
-
-CODE ":NONAME",0,NONAME
-    ret
-
-CODE "?DUP",0,QDUP
-    ret
-
-CODE ".(",0,DOTLPAREN
-    ret
-
-CODE ".R",0,DOTR
-    ret
-
-CODE "'",0,TICK
-    call bl
-    call word
-    call find
-    call isZero
-    ret z
-    _pushString "?" 
-    call abort
-    ret
-
-CODE "(",0,LPAREN
-    ret
-
-CODE "[']",0,BRACKTICK
-    call tick               ; get xt of 'xxx'
-    call literal
-    ret
-
-CODE "[compile]",0,XCOMPILE
-    ret
-
-CODE "*",0,STAR
-    ret
-
-CODE "*/",0,STARSLASH
-    ret
-
-CODE "*/MOD",0,STARSLASHMOD
-    ret
-
-CODE "/",0,SLASH
-    ret
-
-CODE "/MOD",0,SLASHMOD
-    ret
-
-CODE "#",0,HASH
-    ret
-
-CODE "#>",0,HASHGT
-    ret
-
-CODE "#S",0,HASHS
-    ret
-
-CODE "<",0,LT
-    ret
-
-CODE "<#",0,LTHASH
-    ret
-
-CODE "<>",0,NOTEQUAL
-    ret
-
-CODE ">",0,GT
+CODE "?dup",0,qDup
     ret
 
-CODE ">IN",0,GTIN
+CODE ".(",0,dotParen
     ret
 
-CODE "2!",0,TWOSTORE
+CODE ".r",0,dotR
     ret
 
-CODE "2@",0,TWOAT
+CODE "(",0,PAREN
     ret
 
-CODE "2>R",0,TWOTOR
+CODE "*",0,star
     ret
 
-CODE "2R@",0,TWORAT
+CODE "*/",0,starSlash
     ret
 
-CODE "2R>",0,TWORFROM
+CODE "*/mod",0,starSlashMod
     ret
 
-CODE "ABORT",0,ABORT
+CODE "/mod",0,slashMod
     ret
 
-CODE "ABORT.Q",0,ABORTQ
+CODE "#",0,hash
     ret
 
-CODE "ABS",0,ABS
+CODE "#>",0,hashGT
     ret
 
-CODE "ACCEPT",0,ACCEPT
+CODE "#s",0,hashS
     ret
 
-CODE "BKSP",0,BKSP
+CODE "<#",0,LTHash
     ret
 
-CODE "CMOVE",0,CMOVE
+CODE "<>",0,notEQ
     ret
 
-CODE "COMPILE",0,COMPILE
+CODE ">in",0,GTIn
     ret
 
-CODE "CONSTANT",0,CONSTANT
+CODE "abort",0,abort
     ret
 
-CODE "DECIMAL",0,DECIMAL
+CODE "abort.Q",0,abortQT
     ret
 
-CODE "DEFER",0,DEFER
+CODE "abs",0,abs
     ret
 
-CODE "DEFER!",0,DEFERSTORE
+CODE "accept",0,accept
     ret
 
-CODE "DEFER@",0,DEFERAT
+CODE "cmove",0,cMove
     ret
 
-CODE "DUMP",0,DUMP
+code "constant",0,constant
     ret
 
-CODE "EMIT",0,EMIT
+code "decimal",0,decimal
     ret
 
-CODE "ERASE",0,ERASE
+code "dump",0,dump
     ret
 
-CODE "EVALUATE",0,EVALUATE
+code "emit",0,emit
     ret
 
-CODE "EXIT",0,EXIT
+code "erase",0,erase
     ret
 
-CODE "FILL",0,FILL
+code "evaluate",0,evaluate
     ret
 
-CODE "FM/MOD",0,FMSLASHMOD
+code "exit",0,exit
     ret
 
-CODE "HEX",0,HEX
+code "fill",0,fill
     ret
 
-CODE "HOLD",0,HOLD
+code "fm/mod",0,FMSlashmod
     ret
 
-CODE "IMMEDIATE",0,IMMEDIATE
+code "hex",0,hex
     ret
 
-CODE "INVERT",0,INVERT
+code "hold",0,hold
     ret
 
-CODE "IS",0,IS
+code "invert",0,invert
     ret
 
-CODE "LITERAL",0,LITERAL
+code "is",0,is
     ret
 
-CODE "M*",0,MSTAR
+code "literal",0,literal
     ret
 
-CODE "MOD",0,MOD
+code "m*",0,mstar
     ret
 
-CODE "MOVE",0,MOVE
+code "mod",0,mod
     ret
 
-CODE "PAD",0,PAD
+code "move",0,move
     ret
 
-CODE "PARSE",0,PARSE
+code "pad",0,pad
     ret
 
-CODE "PARSE-NAME",0,PARSENAME
+code "parse",0,parse
     ret
 
-CODE "PC!",0,PCSTORE
+code "parse-name",0,parseName
     ret
 
-CODE "PC@",0,PCAT
+code "pc!",0,pcStore
     ret
 
-CODE "PICK",0,PICK
+code "pc@",0,pcAt
     ret
 
-CODE "POSTPONE",0,POSTPONE
+code "pick",0,pick
     ret
 
-CODE "QUIT",0,QUIT
+code "postpone",0,postpone
     ret
 
-CODE "RECURSE",0,RECURSE
+code "quit",0,quit
     ret
 
-CODE "ROLL",0,ROLL
+code "recurse",0,recurse
     ret
 
-CODE "RP!",0,RPSTORE
+code "roll",0,roll
     ret
 
-CODE "RP@",0,RPAT
+code "rp!",0,rpStore
     ret
 
-CODE "S.Q",0,SQ
+code "rp@",0,rpAt
     ret
 
-CODE "S>D",0,STOD
+code "s.q",0,sq
     ret
 
-CODE "SEE",0,SEE
+code "s>d",0,stod
     ret
 
-CODE "SIGN",0,SIGN
+code "see",0,see
     ret
 
-CODE "SP!",0,SPSTORE
+code "sign",0,sign
     ret
 
-CODE "SP@",0,SPAT
+code "sp!",0,spStore
     ret
 
-CODE "SPACE",0,SPACE
+code "sp@",0,spAt
     ret
 
-CODE "SPACES",0,SPACES
+code "space",0,space
     ret
 
-CODE "TO",0,TO
+code "spaces",0,spaces
     ret
 
-CODE "TYPE",0,TYPE
+code "to",0,to
     ret
 
-CODE "U.",0,UDOT
+code "type",0,type
     ret
 
-CODE "U.R",0,UDOTR
+code "u.",0,udot
     ret
 
-CODE "U>",0,UGT
+code "u.r",0,uDotR
     ret
 
-CODE "UM*",0,UMSTAR
+code "u>",0,uGT
     ret
 
-CODE "UM/MOD",0,UMSLASHMOD
+code "um/mod",0,umSlashMod
     ret
 
-CODE "UM+",0,UMPLUS
+code "um+",0,umPlus
     ret
 
-CODE "UNUSED",0,UNUSED
+code "unused",0,unused
     ret
 
-CODE "VALUE",0,VALUE
+code "value",0,value
     ret
 
-CODE "VARIABLE",0,VARIABLE
+code "variable",0,variable
     ret
 
-CODE "WITHIN",0,WITHIN
+code "within",0,within
     ret
 
-CODE "WORDS",0,WORDS
+code "words",0,words
     ret

@@ -1,50 +1,87 @@
+; non-standard find TODO: extend its return to include IMMED flag
+; ( ptr len -- xt )
 CODE "find",0,find                                        
-            _fetch latest                       ; ptr len headptr
+    _fetch latest                       ; ptr len headptr
 find1:
-            call dup
-            call isZero
-            jr z,find4                          ; NULL pointer?  (end of the linked list)
-            call dup                            ; ptr len headptr headptr
-            inc BC
-            inc BC                              ; ptr len headptr flagsPtr
-            ld A,(BC)                           ; A = flags
-            bit 7,A                             ; test HIDDEN flag
-            jr z, find2 
-            call drop                           ; ptr len headptr
-            jr find3
+    call dup
+    call isZero
+    jr z,find4                          ; NULL pointer?  (end of the linked list)
+    call dup                            ; ptr len headptr headptr
+    inc BC
+    inc BC                              ; ptr len headptr flagsPtr
+    ld A,(BC)                           ; A = flags
+    bit 7,A                             ; test HIDDEN flag
+    jr z, find2 
+    call drop                           ; ptr len headptr
+    jr find3
 find2:
-            inc BC                              ; ptr len headptr namePtr   ; length
-            call dup                            ; ptr len headptr namePtr namePtr
-            call cat                            ; ptr len headptr namePtr nlen
-            call tor                            ; ptr len headptr namePtr r: nlen
-            inc BC                              ; ptr len headptr namePtr'  ; first char
-            call twoover                        ; ptr len headptr namePtr' ptr len
-            call dup                            ; ptr len headptr namePtr' ptr len len
-            call rfrom                          ; ptr len headptr namePtr' ptr len len nlen
-            call minus                          ; ptr len headptr namePtr' ptr len diff
-            call isZero                         ; ptr len headptr namePtr' ptr len
-            jr z, find2A
-            call drop                           ; ptr len headptr namePtr' ptr
-            call drop                           ; ptr len headptr namePtr' 
-            call drop                           ; ptr len headptr 
-            jr find3
+    inc BC                              ; ptr len headptr namePtr   ; length
+    call dup                            ; ptr len headptr namePtr namePtr
+    call cat                            ; ptr len headptr namePtr nlen
+    call tor                            ; ptr len headptr namePtr r: nlen
+    inc BC                              ; ptr len headptr namePtr'  ; first char
+    call twoover                        ; ptr len headptr namePtr' ptr len
+    call dup                            ; ptr len headptr namePtr' ptr len len
+    call rfrom                          ; ptr len headptr namePtr' ptr len len nlen
+    call minus                          ; ptr len headptr namePtr' ptr len diff
+    call isZero                         ; ptr len headptr namePtr' ptr len
+    jr z, find2A
+    call drop                           ; ptr len headptr namePtr' ptr
+    call drop                           ; ptr len headptr namePtr' 
+    call drop                           ; ptr len headptr 
+    jr find3
 find2A:
-            call compareStr                     ; ptr len headptr match     ;match == 0
-            call isZero
-            jr z,find4                          
+    call compareStr                     ; ptr len headptr match     ;match == 0
+    call isZero
+    jr z,find4                          
 find3:
-            call at                             ; ptr len headptr'
-            jr find1
+    call at                             ; ptr len headptr'
+    jr find1
 find4:
-            jp twonip                           ; headptr
+    jp twonip                           ; headptr
 
 ; >body     ( ptr -- ptr' )
-CODE ">body",0,getBody                                        
-            _cellp                              ; skip over backlink
-            _onep                               ; skip over flags
-            call dup
-            call cat
-            _onep                               ; skip over len
-            call plus
-            ret
+CODE ">body",0,toBody
+getBody:                                        
+    _cellp                              ; skip over backlink
+    _onep                               ; skip over flags
+    call dup
+    call cat
+    _onep                               ; skip over len
+    call plus
+    ret
+
+CODE "'",0,tick
+    call bl
+    call word
+    call find
+    call isZero
+    ret z
+    _pushString "?" 
+    call abort
+    ret
+
+CODE "[']",IMMED,bracTick
+    call tick               ; get xt of 'xxx'
+    call literal
+    ret
+
+code "defer",0,defer
+    call create
+    _compile abort
+    call does
+    call at
+    call execute
+    ret
+
+code "defer!",0,deferstore
+    call toBody
+    call store
+    ret
+
+code "defer@",0,deferAt
+    call toBody
+    call at
+    ret
+
 

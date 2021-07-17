@@ -30,7 +30,4 @@ TESTS_START:
     _printString "\r\nDone! \r\n"
     halt
     
-FAILED:
-    .pstr "Failed: "
-
 START_USER:

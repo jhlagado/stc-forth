@@ -41,6 +41,26 @@ CODE '+!',0,pstor
     call store
     ret
 
+; 2! ( x1 x2 a-addr -- )   
+; store 2 cells
+CODE "2!",0,twoStore
+    call swap
+    call over
+    call store
+    call cellp
+    call store
+    ret
+    
+; 2@ ( a-addr -- x1 x2 )   
+; fetch 2 cells
+CODE "2@",0,twoAt
+    call dup
+    call cellp
+    call at
+    call swap
+    call at
+    ret
+
 ; r@ -- n r: n -- n
 CODE "r@",0,RAT                                          
     call rfrom

@@ -47,7 +47,8 @@ CODE "not",0,INVER
     ret
 
 ; =      x1 x2 -- flag         test x1=x2
-CODE "=",0,EQUAL
+CODE "=",0,EQ
+EQUAL:
     call XORR
     call isZero
     jr EQU1
@@ -59,7 +60,8 @@ EQU1:
 
 ;   U<          ( u u -- t )
 ;               Unsigned compare of top two items.
-CODE "U<",0,ULESS	        ; less than
+CODE "U<",0,ULT	        ; less than
+ULESS:
     call twodup
     call XORR
     call ZLESS
@@ -76,7 +78,8 @@ ULES1:
 
 ;   <           ( n1 n2 -- t )
 ;               is less than
-CODE "<",0,LESS	        ; less than
+CODE "<",0,LT	        ; less than
+LESS:
     call twodup
 	call XORR 
     call isZero
@@ -90,7 +93,8 @@ LESS1:
     ret
 
 ; >      n1 n2 -- flag          test n1 > n2
-CODE ">",0,GREATR	        ; less than
+CODE ">",0,GT
+GREATR:	        ; less than
     call swap
     jr LESS
 
@@ -117,3 +121,7 @@ MIN1:
     call DROP
     ret
     
+isZero:                                         ; n -- ?  ; this is wrong, should leave boolean
+    _compareZero B,C
+    jp drop
+

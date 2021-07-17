@@ -158,4 +158,8 @@ else_isValidDigit1:
         call carryToBool
 endIf_isValidDigit1:
     ret
-
+carryToBool:
+    ld BC,0
+    ret nc
+    dec BC
+    ret

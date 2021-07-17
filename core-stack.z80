@@ -1,4 +1,5 @@
-CODE "dolit", 0, dolit                         
+CODE "dolit", 0, lit
+dolit:                         
     call dup
     pop HL
     ld C,(HL)
@@ -6,6 +7,17 @@ CODE "dolit", 0, dolit
     ld B,(HL)
     inc HL
     jp (HL)
+
+; (S")     -- c-addr u   run-time code for S"
+; is followed by a literal Pascal string
+CODE "litString", 0, litString                         
+XSQUOTE:
+    call RFrom          ; addr
+    call count          ; addr+1 len
+    call twodup         ; addr+1 len addr+1 len
+    call plus           ; addr+1 len addr+len+1
+    call ToR            ; addr+1 len
+    ret                 ; TODO: optimise to LD HL,BC jp (HL)
 
 CODE ">r", 0, tor
     pop HL
@@ -138,8 +150,38 @@ CODE "depth", 0, depth                       ; -- n
     _div2
     ret
 
-isZero:                                         ; n -- ?  ; this is wrong, should leave boolean
-    _compareZero B,C
-    jp drop
+; 2>R  ( d -- )          
+; 2 to R
+CODE "2>r",0,twoToR
+    call swap
+    call rFrom
+    call swap
+    call toR
+    call swap
+    call toR
+    call toR
+    ret
 
+; 2R@  ( -- d )          
+; copy 2 from R
+CODE "2r@",0,twoRat
+    _push 0
+    call rFrom
+    call rFrom
+    call rFrom
+    call twoOver     
+    call twoOver     
+    call drop
+    ret
+
+; 2R>  ( -- d )          
+; fetch 2 from R
+CODE "2r>",0,twoRFrom
+    call rFrom
+    call rFrom
+    call rFrom
+    call swap
+    call rot
+    call toR
+    ret
 

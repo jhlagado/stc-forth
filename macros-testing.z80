@@ -22,15 +22,9 @@ skip%%M:
     call drop
     _compareZero H,L
     jp z, tf_done%%M            
-    _push FAILED
-    call printPStr
-    _push  te_fail%%M
-    call printPStr
+    _printString "\r\rFailed: "
+    _printString failTxt
     halt
-    jr skip%%M
-te_fail%%M:
-        .pstr failTxt
-skip%%M:    
 tf_done%%M:
     call cr
 .endm

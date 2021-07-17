@@ -7,7 +7,8 @@ CODE "negate", 0, negate
     ret
 
 ; dividend divisor -- quotient remainder
-CODE "/", 0, divide                         
+CODE "/", 0, slash                         
+divide:
     _pop HL  
     push DE
     ex DE,HL
@@ -43,7 +44,8 @@ divid3:
 
 
 ; u1 u2 -- plo phi
-CODE "U*", 0, uMultiply                         
+CODE "UM*", 0,umstar 
+uMultiply:                         
     _pop HL                             ; HL = u2, BC = u1
     push DE                             ; save DE .... suspend forth   
     ex DE,HL                            ; DE = u2                
@@ -114,8 +116,3 @@ CODE "2-",0,twom
     dec BC
     ret
 
-carryToBool:
-    ld BC,0
-    ret nc
-    dec BC
-    ret

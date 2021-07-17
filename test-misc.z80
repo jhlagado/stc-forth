@@ -2,3 +2,5 @@
     _push 16
     _store base
     
+    ; _push 100
+    ; expect 222, "not OK"

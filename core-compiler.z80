@@ -1,6 +1,14 @@
+; [COMPILE]   ( -- ; <string> )
+; Compile the next immediate word into code dictionary.
+
+CODE "[compile]",0,bracCompile
+    call tick
+    call comma
+    ret
+
 ; COMPILE     ( -- )
 ; Compile the next address in colon list to code dictionary.
-CODE 'COMPILE',0,compi
+CODE 'compile',0,compile
     call rfrom
     call dup
     call at
@@ -13,7 +21,7 @@ CODE 'COMPILE',0,compi
 
 ;   LITERAL     ( w -- )
 ;               Compile tos to code dictionary as an integer literal.
-CODE 'LITERAL',IMMED,LITER
+CODE 'literal',IMMED,LITER
     _compile dolit
     call comma
     ret
@@ -46,11 +54,11 @@ create1:
 hidden:
     _cellp                                  ; pflags
     call dup                                ; pflags pflags
-    call at                                 ; pflags flags
+    call cat                                 ; pflags flags
     _push HIDE                              ; pflags flags HIDE
     call xorr                               ; pflags flags^HIDE
     call swap                               ; flags^HIDE pflags
-    call store
+    call cstore
     ret
 
 CODE ":",0,colon
@@ -79,6 +87,18 @@ CODE ";",IMMED,semicolon
     call hidden                             ; toggle hidden flag -- unhide 
     call lbrac                              ; go back to immediate mode.
     ret                                
+
+; IMMEDIATE   --   
+; make last definition immediate
+code "immediate",0,immediate
+    _fetch latest
+    call cellp
+    call cat
+    _push IMMED
+    call orr
+    call swap
+    call cstore
+    ret
 
 CODE ":noname",0,colonNoName
     _fetch here                             ; TOS = here
