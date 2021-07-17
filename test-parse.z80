@@ -12,3 +12,23 @@
     call minus
     EXPECT 0, "word ptr HERE"
 
+    TEST_SET_TEXT ""
+    _push wordBuf1                 ; buffer
+    _push $40                      ; max length
+    _push $20                      ; delim
+    _push 0                           ; char
+    call wordRead
+    call depth
+    expect 2, " depth"
+    expect 0, " length 0"
+    expect wordBuf1, " wordBuf1"
+
+    TEST_SET_TEXT "xx yyy"
+    _push wordBuf1                      ; buffer
+    _push $40                           ; max length
+    _push $20                           ; delim
+    _push $33                           ; char
+    call wordRead
+    expect 3, "xxx length 3"
+    call drop                           ; cleanup depth
+

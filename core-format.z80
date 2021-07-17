@@ -1,0 +1,161 @@
+formatNum:                              ; ptr num -- ptr len
+    call over                           ; ptr num ptr
+    call swap                           ; ptr ptr num
+    _isNegative                         ; Detect sign of num
+    jr z,formatNum1
+        call negate                     ; ptr ptr num1
+        call swap                       ; ptr num1 ptr ptr
+        _pushChar '-'                   ; ptr num1 ptr '-'
+        call over                       ; ptr num1 ptr '-' ptr
+        call cstore                     ; ptr num1 ptr
+        inc BC                          ; ptr num1 ptr'
+        call swap                       ; ptr ptr' num1
+formatNum1:    
+    _fetch base                         ; ptr ptr' num1 base
+    call swap                           ; ptr ptr' base num1
+    ex AF,AF'
+    ld A, 0                             ; D counter
+    ex AF,AF'
+do_formatNum:
+        ex AF,AF'
+        inc A
+        ex AF,AF'
+        call over                       ; ptr ptr' base num1 base
+        call divide                     ; ptr ptr' base num2 rem
+        call tor
+        call dup                        ; ptr ptr' base num2 num2
+        call isZero
+        jr nz,do_formatNum
+    call twodrop                          ; ptr ptr'
+    ex AF,AF'
+formatNum11:
+        ex AF,AF'
+        call rfrom
+        call digitToChar                ; ptr ptr' ascii
+        call over                       ; ptr ptr' ascii ptr'
+        call cstore                     ; ptr ptr'
+        inc BC                          ; ptr ptr''
+        ex AF,AF'
+        dec A
+        jr nz, formatNum11
+        ex AF,AF'
+    call over                           ; ptr ptr'' ptr
+    jp minus                          ; ptr len
+
+toNumber:                               ; str len -- num err
+    call dup                            ; str len len
+    call isZero
+    jr nz,endif_toNumber1               ; if zero then return 0 0
+        _nip                        ; zero
+        jp dup                        ; zero zero
+endif_toNumber1:
+    call swap                           ; len str
+    LD HL,BC                            ; len str ; HL = str
+    push HL                             ;-------****
+    call swap                           ; str len ; HL = str
+    pop HL
+    ld A,(HL)                           ; A = char
+    cp '-'                              ; is A negative number?
+    jr nz,toNumber2
+        inc HL
+        dec BC                          ; str len
+        call dup                        ; str len len
+        call isZero
+        jr nz,else_toNumber3
+            _nip                    ; zero
+            call dup                    ; zero zero
+            ld BC,1                     ; TODO _push 1
+            ret                         ; 0 1
+else_toNumber3:
+            ld A,(HL)                   ; str len ; A = char
+toNumber2:
+    _push 0                             ; str len num(0)
+toNumber21:
+        call dup
+        ld C,A                          ; str len num char
+        call charToDigit                ; str len num nib
+        call dup                        ; str len num nib nib
+        call isValidDigit               ; str len num nib bool
+        call isZero
+        jr nz,endif_toNumber211         ; str len num nib
+            _twonip                   ; str nib
+            call drop                   ; str
+            ld BC,0                     ; 0
+            _push 1                     ; 0 1
+            ret
+endIf_toNumber211:
+        push HL
+        call plus                       ; str len num (num += A)
+        call swap                       ; str num len
+        dec BC                          ; str num len (len--)
+        call dup                        ; str num len len
+        call isZero                     ; str num len
+        call swap                       ; str len num
+        jr z, toNumber22
+        _fetch base                     ; str len num base
+        call uMultiply                  ; str len num num2 (num *= var_base)
+        call drop                       ; str len num
+        pop HL
+        inc HL
+        ld A,(HL)                       ; a = next char
+        jr toNumber21
+toNumber22:
+    pop HL
+    _nip                            ; str num
+    call swap                           ; num str
+    ld A,(BC)
+    cp "-"
+    call drop                           ; num
+    jr nz,toNumber3
+        call negate                     ; num
+toNumber3:
+    _push 0                             ; num 0
+    ret
+
+digitToChar:                            ; n -- a
+    ld A,$30
+    add A,C                             ; convert TOS digit to ASCII
+    cp $3A
+    jr c,digitToChar1
+        add A,7
+digitToChar1:
+    ld C,A
+    ret
+
+charToDigit:                            ; char -- numOrError ; error = -1
+    ld A,C
+    ld B,0
+    sub '0'                             ; < '0'?
+    jr c, charToDigit1
+        cp 10                           ; <= '9'?
+        jr nc,else_charToDigit11
+            ld C,A
+            or A  
+            jr endif_charToDigit11                      ; clear carry flag
+else_charToDigit11:
+            sub 17                      ; < 'A'? (17 is 'A'-'0')
+            jr c,charToDigit111
+                add A,10
+                ld C,A
+charToDigit111:
+endif_charToDigit11:
+charToDigit1:
+    jr nc,charToDigit2
+        ld BC,-1
+charToDigit2:
+    ret
+
+; is in range 0 - var_base
+isValidDigit:                           ; n -- b
+    bit 7,B
+    jr z,else_isValidDigit1 
+        ld BC,0
+        jr endif_isValidDigit1
+else_isValidDigit1:
+        ld A,C
+        ld BC, (var_base)
+        cp C
+        call carryToBool
+endIf_isValidDigit1:
+    ret
+

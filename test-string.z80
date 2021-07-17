@@ -1,0 +1,31 @@
+    call initKernel
+    _push 16
+    _store base
+
+    _pushString "String2"
+    call drop
+    _pushString "string"
+    call compareStr
+    expect -1, "s1 should be less than s2"
+
+    _pushString "string"
+    _pushString "String2"
+    call drop
+    call swap
+    call compareStr
+    expect 1, "s1 should be greater than s2"
+
+    _pushString "string"
+    call drop
+    _pushString "string"
+    call compareStr
+    expect 0, "s1 should equal s1"
+
+    _pushString "string"
+    call drop
+    _pushString "String2"
+    call drop
+    _push 0
+    call compareStr
+    expect 0, "zero length, s1 should equal s1"
+

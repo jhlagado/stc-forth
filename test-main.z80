@@ -19,10 +19,13 @@ TESTS_START:
 
     .include "test-compiler.z80"
     .include "test-control.z80"
+    .include "test-dict.z80"
+    .include "test-format.z80"
     .include "test-math.z80"
     .include "test-misc.z80"
     .include "test-parse.z80"
     .include "test-stack.z80"
+    .include "test-string.z80"
     
     _printString "\r\nDone! \r\n"
     halt

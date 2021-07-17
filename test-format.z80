@@ -1,0 +1,110 @@
+    call initKernel
+    _push 16
+    _store base
+
+    ; formatNum
+
+    ld HL,10
+    ld (var_base),HL
+
+    _push wordBuf2
+    _push -123
+    call formatNum
+    expect 4, "length of -123 = 4"
+    _pop HL    
+    _setTOS 0,(HL)
+    expect $2D, "first char = '-'"
+
+    _push wordBuf2
+    _push -123
+    call formatNum
+    call dup
+    expect 4, "-123 length 4"
+    call cr
+    call printStr
+
+    ; toNumber
+
+    _pushStr "x",1
+    call toNumber
+    expect 1, 'error'
+    expect 0, 'zero'
+
+    _pushStr "",0
+    call toNumber
+    expect 0, 'no error'
+    expect 0, 'zero'
+
+    _pushStr "-",1
+    call toNumber
+    expect 1, 'error'
+    expect 0, 'zero'
+
+    _pushStr "1",1
+    call toNumber
+    expect 0, 'no error'
+    expect 1, '1'
+
+    _pushStr "10",2
+    call toNumber
+    expect 0, 'no error'
+    expect 10, '10'
+
+    _pushStr "-10",3
+    call toNumber
+    expect 0, 'no error'
+    expect -10, '-10'
+
+    _pushStr "100",3
+    call toNumber
+    expect 0, 'no error'
+    expect 100, '100'
+
+    _pushStr "-123",4
+    call toNumber
+    expect 0, 'no error'
+    expect -123, '-123'
+
+    ; charToDigit
+
+    _push $30
+    call charToDigit
+    expect 0, '0'
+
+    _push $39
+    call charToDigit
+    expect 9, '9'
+
+    _push $41
+    call charToDigit
+    expect 10, '10'
+
+    _push $46
+    call charToDigit
+    expect 15, '15'
+
+    _push $29
+    call charToDigit
+    expect -1, '< 0'
+
+    _push $40
+    call charToDigit
+    expect -1, '>9'
+
+    ; isValidDigit
+
+    _push 0
+    call isValidDigit
+    expect TRUE, '0 in base 10'
+
+    _push 9
+    call isValidDigit
+    expect TRUE, '9 in base 10'
+
+    _push -1
+    call isValidDigit
+    expect FALSE, '-1 not in base 10'
+
+    _push 10
+    call isValidDigit
+    expect FALSE, '10 not in base 10'

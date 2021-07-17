@@ -13,3 +13,23 @@
     TEST_SET_TEXT "5 2/"
     call INTERPRET
     EXPECT 2, "interpret 5/2"
+
+    _push 40
+    _push 4
+    call divide
+    expect 0, "remainder 0"
+    expect 10, "40 / 4 = 10"
+
+    _push 24
+    _push 10
+    call divide
+    expect 4, "remainder 4"
+    expect 2, "24 / 10 = 2"
+
+    ; unsigned Multiply
+
+    _push 16
+    _push 9
+    call uMultiply
+    call drop
+    expect 144, '16 x 9 = 144'
