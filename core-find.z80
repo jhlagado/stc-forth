@@ -4,16 +4,17 @@
 CODE "find",0,find
     _fetch latest
 find1:
+    call LFAtoNFA   
     call twoDup
     call over
-    call cFetch
-    call charPlus
+    call cAt
+    _charPlus
     call stringEQ
     call dup
     call isZero
     jr z,find2
     call drop
-    call nfatolfa
+    call NFAtoLFA
     call at
     call dup
 find2:
@@ -21,16 +22,18 @@ find2:
     jr nz,find1
     call dup
     call isZero
-    jr z, find3
+    jr z, find3   ; todo: ret z
     call nip
     call dup
-    call nfatocfa
+    call NFAtoBody
     call swap
     call immedq
     call isZero
-    call not
+    jr z,find2a
+    _push -1
+    ret
+find2a:
     _push 1
-    call orr
 find3:
     ret
 

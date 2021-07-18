@@ -34,7 +34,12 @@
 .endm
 
 .macro _pushString, s1
-    call XSQUOTE
+    call litString
+    .pstr s1
+.endm    
+
+.macro _pushCString, s1
+    call litCString
     .pstr s1
 .endm    
 

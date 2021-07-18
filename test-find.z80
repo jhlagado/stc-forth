@@ -2,19 +2,33 @@
     _push 16
     _store base
 
+marker1:
+    _pushCString "unknown"
+    call find
+    expect 0, "not found"
+    expect marker1+3, "not found"
+
+    _pushCString "2/"
+    call find
+    expect 1, "not immediate"
+    expect twoSlash, "twoSlash"
+
+    _pushCString ";"
+    call find
+    expect -1, "immediate"
+    expect semicolon, "semicolon"
+
     _pushStr "2/",2
     call findx
     call drop
     expect HEADER_TWOSLASH, "twoSlash"
 
-    _pushPStr "#$%"
-    _unpackStr
+    _pushStr "#$%",3
     call findx
     call drop
     expect 0, "not found: #$%"
 
-    _pushPStr "ok"
-    _unpackStr
+    _pushStr "ok",2
     call findx
     call drop    
     expect HEADER_ok, "found: ok"

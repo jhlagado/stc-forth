@@ -9,7 +9,7 @@ dolit:
     jp (HL)
 
 ; (S")     -- c-addr u   run-time code for S"
-; is followed by a literal Pascal string
+; is followed by a literal Packed (Pascal) string
 CODE "litString", 0, litString                         
 XSQUOTE:
     call RFrom          ; addr
@@ -17,6 +17,16 @@ XSQUOTE:
     call twodup         ; addr+1 len addr+1 len
     call plus           ; addr+1 len addr+len+1
     call ToR            ; addr+1 len
+    ret                 ; TODO: optimise to LD HL,BC jp (HL)
+
+; (S")     -- c-addr u   run-time code for S"
+; is followed by a literal Counted string
+CODE "litCString", 0, litCString                         
+    call RFrom          ; addr
+    call dup            ; addr addr
+    call count          ; addr addr+1 len
+    call plus           ; addr addr+len+1
+    call ToR            ; addr
     ret                 ; TODO: optimise to LD HL,BC jp (HL)
 
 CODE ">r", 0, tor

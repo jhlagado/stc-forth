@@ -127,19 +127,34 @@ xdoes:                                      ; --
     call store                              ; rewrite with address of body after does>
     ret                                     ; return to caller of caller (terminate caller)
 
+;Z IMMED?    nfa -- f      fetch immediate flag
+;   1- C@ ;                     nonzero if ``immed''
+CODE "IMMED?",0,IMMEDQ
+    _onem
+    call at
+    _push IMMED
+    call andd
+    ret
+
 ; NFA>LFA   nfa -- lfa    
 ; name adr -> link field
 ;   4 - ;
-CODE "NFA>LFA",0,NFATOLFA
+CODE "LFA>NFA",0,LFAtoNFA
+    _cellp
+    _onep
+    ret
+
+; NFA>LFA   nfa -- lfa    
+; name adr -> link field
+;   4 - ;
+CODE "NFA>LFA",0,NFAtoLFA
     _onem
-    _onem
-    _onem
-    _onem
+    _twom
     ret
 
 ; NFA>CFA   nfa -- cfa    name adr -> code field
 ;   COUNT 7F AND + ;       mask off 'smudge' bit
-CODE "NFA>CFA",0,NFATOCFA
+CODE "NFA>body",0,NFAtoBody
     call dup
     call cat
     _onep                               ; skip over len

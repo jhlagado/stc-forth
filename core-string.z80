@@ -1,6 +1,5 @@
 ;   COUNT       ( b -- b +n )
 ;               Return count byte of a string and add 1 to byte address.
-
 CODE 'COUNT',0,COUNT
     call dup
     _onep
@@ -8,7 +7,9 @@ CODE 'COUNT',0,COUNT
     call cat
     ret
 
-; destroys: HL
+; non-standard word
+; S= ( str1 str2 len -- -1|0|1 )
+CODE 'S=',0,stringEQ
 compareStr:                             ; str1 str2 len -- (-1|0|1)
     call dup
     call isZero                         ; test for Count=0

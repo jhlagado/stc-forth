@@ -28,6 +28,10 @@
     inc BC
 .endm
 
+.macro _charPlus
+    inc BC
+.endm
+
 .macro _twop
     _onep
     _onep
