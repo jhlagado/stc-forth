@@ -22,19 +22,18 @@ find2:
     jr nz,find1
     call dup
     call isZero
-    jr z, find3   ; todo: ret z
+    ret z
     call nip
     call dup
     call NFAtoBody
     call swap
     call immedq
     call isZero
-    jr z,find2a
+    jr z,find3
     _push -1
     ret
-find2a:
-    _push 1
 find3:
+    _push 1
     ret
 
 ; ( ptr len -- xt result )

@@ -5,10 +5,11 @@ repl:
 interpret:
     _push $20                       ; str maxlen delim
     call word                       ; c-addr                 
-    call count                      ; str len
-    call dup  
+    call dup                        ; c-addr c-addr
+    call cat                        ; c-addr len
     call isZero                     ; str len len
-    jr z,interpret2                 ; str len
+    jr z,interpret2                 
+    call count                      ; str len
     _fetch state
     call isZero
     jr z,interpret1                 ; str len
@@ -18,7 +19,7 @@ interpret1:
     call interpWord                 ; num?
     jr interpret
 interpret2:
-    jp twodrop                      ; cleanup and return
+    jp drop                      ; cleanup and return
 
 interpWord:                         ; str len -- num?
     call twodup                     ; str len str len
