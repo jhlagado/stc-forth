@@ -1,5 +1,41 @@
+; FIND   c-addr -- c-addr 0   if not found
+;                  xt     1   if immediate
+;                  xt    -1   if normal
+CODE "find",0,find
+    _fetch latest
+find1:
+    call twoDup
+    call over
+    call cFetch
+    call charPlus
+    call stringEQ
+    call dup
+    call isZero
+    jr z,find2
+    call drop
+    call nfatolfa
+    call at
+    call dup
+find2:
+    call isZero
+    jr nz,find1
+    call dup
+    call isZero
+    jr z, find3
+    call nip
+    call dup
+    call nfatocfa
+    call swap
+    call immedq
+    call isZero
+    call not
+    _push 1
+    call orr
+find3:
+    ret
+
 ; ( ptr len -- xt result )
-CODE "find",0,findx
+CODE "findx",0,findx
     call findWord
     _push 0
     ret

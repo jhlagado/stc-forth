@@ -127,11 +127,31 @@ xdoes:                                      ; --
     call store                              ; rewrite with address of body after does>
     ret                                     ; return to caller of caller (terminate caller)
 
+; NFA>LFA   nfa -- lfa    
+; name adr -> link field
+;   4 - ;
+CODE "NFA>LFA",0,NFATOLFA
+    _onem
+    _onem
+    _onem
+    _onem
+    ret
+
+; NFA>CFA   nfa -- cfa    name adr -> code field
+;   COUNT 7F AND + ;       mask off 'smudge' bit
+CODE "NFA>CFA",0,NFATOCFA
+    call dup
+    call cat
+    _onep                               ; skip over len
+    call plus
+    ret
+
 ; >body     ( ptr -- ptr' )
 CODE ">body",0,toBody
 getBody:                                        
     _cellp                              ; skip over backlink
     _onep                               ; skip over flags
+    ; TODO: replace rest with jump to NFATOCFA
     call dup
     call cat
     _onep                               ; skip over len

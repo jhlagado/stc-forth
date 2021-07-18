@@ -29,13 +29,27 @@
 .endm
 
 .macro _twop
-    inc BC
-    inc BC
+    _onep
+    _onep
 .endm
 
 .macro _cellp
     _twop
 .endm
+
+.macro _onem
+    dec BC
+.endm
+
+.macro _twom
+    _onem
+    _onem
+.endm
+
+.macro _cellm
+    _twom
+.endm
+
 
 .macro _fetch, label
     call dup
