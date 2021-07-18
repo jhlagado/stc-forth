@@ -176,12 +176,8 @@ getBody:
 CODE "'",0,tick
     call bl
     call word
-    call findx
+    call find
     call drop
-    call isZero
-    ret z
-    _pushString "?" 
-    call abort
     ret
 
 CODE "[']",IMMED,bracTick

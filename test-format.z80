@@ -1,18 +1,14 @@
     call initKernel
-    _push 16
+    _push 10
     _store base
 
     ; formatNum
-
-    ld HL,10
-    ld (var_base),HL
 
     _push wordBuf2
     _push -123
     call formatNum
     expect 4, "length of -123 = 4"
-    _pop HL    
-    _setTOS 0,(HL)
+    call cAt
     expect $2D, "first char = '-'"
 
     _push wordBuf2

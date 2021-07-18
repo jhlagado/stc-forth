@@ -54,7 +54,8 @@ skipd5:
 skipd6:
     jr skipd1
 skipd7:
-    _setTOS 0,A                             ; TOS = char
+    ld B,0
+    ld C,A                                  ; TOS = char
     ret
 
 wordRead:                                   ; ptr maxlen delim char -- ptr len

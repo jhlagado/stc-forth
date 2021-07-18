@@ -28,7 +28,8 @@ key1:
     ld (currkey),HL         ; increment currkey
     pop BC
     call dup
-    _setTOS 0,A
+    ld B,0
+    ld C,A
     ret
 
 ; getline - input line of text ***

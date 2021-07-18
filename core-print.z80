@@ -22,10 +22,6 @@ printStr1:
 printPStr:                                  ; _ptr --
     call count
     jr printStr
-    ; LD HL,BC
-    ; _setTOS 0,(HL)
-    ; inc HL
-    ; jr printStr1
 
 ; destroys: HL
 CODE ".", 0, dot                            ; num --
