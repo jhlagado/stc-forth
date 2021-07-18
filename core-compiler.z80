@@ -1,13 +1,12 @@
-; [COMPILE]   ( -- ; <string> )
-; Compile the next immediate word into code dictionary.
-
+; [compile]   ( -- ; <string> )
+; Compile the next immediate word into CODE dictionary.
 CODE "[compile]",0,bracCompile
     call tick
     call comma
     ret
 
-; COMPILE     ( -- )
-; Compile the next address in colon list to code dictionary.
+; compile     ( -- )
+; Compile the next address in colon list to CODE dictionary.
 CODE 'compile',0,compile
     call rfrom
     call dup
@@ -19,15 +18,15 @@ CODE 'compile',0,compile
     call drop
     jp (HL)
 
-;   LITERAL     ( w -- )
-;               Compile tos to code dictionary as an integer literal.
-CODE 'literal',IMMED,LITER
+; literal     ( w -- )
+; Compile tos to CODE dictionary as an integer literal.
+CODE 'literal',IMMED,literal
     _compile dolit
     call comma
     ret
 
 ; CREATE ( -- ; <string> )
-; Compile a new array entry without allocating code space.
+; Compile a new array entry without allocating CODE space.
 CODE "create",0,create             
     _fetch here                               ; &here
     _fetch latest                           ; here latest
@@ -54,7 +53,7 @@ create1:
 hidden:
     _cellp                                  ; pflags
     call dup                                ; pflags pflags
-    call cat                                 ; pflags flags
+    call cat                                ; pflags flags
     _push HIDE                              ; pflags flags HIDE
     call xorr                               ; pflags flags^HIDE
     call swap                               ; flags^HIDE pflags
@@ -90,7 +89,7 @@ CODE ";",IMMED,semicolon
 
 ; IMMEDIATE   --   
 ; make last definition immediate
-code "immediate",0,immediate
+CODE "immediate",0,immediate
     _fetch latest
     call cellp
     call cat

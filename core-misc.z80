@@ -10,18 +10,6 @@ CODE ".r",0,dotR
 CODE "(",0,PAREN
     ret
 
-CODE "*",0,star
-    ret
-
-CODE "*/",0,starSlash
-    ret
-
-CODE "*/mod",0,starSlashMod
-    ret
-
-CODE "/mod",0,slashMod
-    ret
-
 CODE "#",0,hash
     ret
 
@@ -55,149 +43,134 @@ CODE "accept",0,accept
 CODE "cmove",0,cMove
     ret
 
-code "constant",0,constant
+CODE "constant",0,constant
     ret
 
-code "decimal",0,decimal
+CODE "decimal",0,decimal
     ret
 
-code "dump",0,dump
+CODE "dump",0,dump
     ret
 
-code "emit",0,emit
+CODE "emit",0,emit
     ret
 
-code "erase",0,erase
+CODE "erase",0,erase
     ret
 
-code "evaluate",0,evaluate
+CODE "evaluate",0,evaluate
     ret
 
-code "exit",0,exit
+CODE "exit",0,exit
     ret
 
-code "fill",0,fill
+CODE "fill",0,fill
     ret
 
-code "fm/mod",0,FMSlashmod
+CODE "hex",0,hex
     ret
 
-code "hex",0,hex
+CODE "hold",0,hold
     ret
 
-code "hold",0,hold
+CODE "invert",0,invert
     ret
 
-code "invert",0,invert
+CODE "is",0,is
     ret
 
-code "is",0,is
+CODE "literal",0,literal
     ret
 
-code "literal",0,literal
+CODE "move",0,move
     ret
 
-code "m*",0,mstar
+CODE "pad",0,pad
     ret
 
-code "mod",0,mod
+CODE "parse",0,parse
     ret
 
-code "move",0,move
+CODE "parse-name",0,parseName
     ret
 
-code "pad",0,pad
+CODE "pc!",0,pcStore
     ret
 
-code "parse",0,parse
+CODE "pc@",0,pcAt
     ret
 
-code "parse-name",0,parseName
+CODE "pick",0,pick
     ret
 
-code "pc!",0,pcStore
+CODE "postpone",0,postpone
     ret
 
-code "pc@",0,pcAt
+CODE "quit",0,quit
     ret
 
-code "pick",0,pick
+CODE "recurse",0,recurse
     ret
 
-code "postpone",0,postpone
+CODE "roll",0,roll
     ret
 
-code "quit",0,quit
+CODE "rp!",0,rpStore
     ret
 
-code "recurse",0,recurse
+CODE "rp@",0,rpAt
     ret
 
-code "roll",0,roll
+CODE "s.q",0,sq
     ret
 
-code "rp!",0,rpStore
+CODE "s>d",0,stod
     ret
 
-code "rp@",0,rpAt
+CODE "see",0,see
     ret
 
-code "s.q",0,sq
+CODE "sign",0,sign
     ret
 
-code "s>d",0,stod
+CODE "sp!",0,spStore
     ret
 
-code "see",0,see
+CODE "sp@",0,spAt
     ret
 
-code "sign",0,sign
+CODE "space",0,space
     ret
 
-code "sp!",0,spStore
+CODE "spaces",0,spaces
     ret
 
-code "sp@",0,spAt
+CODE "to",0,to
     ret
 
-code "space",0,space
+CODE "type",0,type
     ret
 
-code "spaces",0,spaces
+CODE "u.",0,udot
     ret
 
-code "to",0,to
+CODE "u.r",0,uDotR
     ret
 
-code "type",0,type
+CODE "u>",0,uGT
     ret
 
-code "u.",0,udot
+CODE "unused",0,unused
     ret
 
-code "u.r",0,uDotR
+CODE "value",0,value
     ret
 
-code "u>",0,uGT
+CODE "variable",0,variable
     ret
 
-code "um/mod",0,umSlashMod
+CODE "within",0,within
     ret
 
-code "um+",0,umPlus
-    ret
-
-code "unused",0,unused
-    ret
-
-code "value",0,value
-    ret
-
-code "variable",0,variable
-    ret
-
-code "within",0,within
-    ret
-
-code "words",0,words
+CODE "words",0,words
     ret

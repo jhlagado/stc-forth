@@ -42,6 +42,18 @@ divid3:
     cpl
     ret
 
+CODE "*",0,star
+    ret
+
+CODE "*/",0,starSlash
+    ret
+
+CODE "*/mod",0,starSlashMod
+    ret
+
+CODE "/mod",0,slashMod
+    ret
+
 
 ; u1 u2 -- plo phi
 CODE "UM*", 0,umstar 
@@ -74,6 +86,9 @@ CODE "+", 0, plus
     add HL,BC
     ld BC,HL
     pop HL
+    ret
+
+CODE "fm/mod",0,FMSlashmod
     ret
 
 CODE "-", 0, minus                         
@@ -114,5 +129,17 @@ CODE "cell+",0,cellp
 CODE "2-",0,twom
     dec BC
     dec BC
+    ret
+
+CODE "m*",0,mstar
+    ret
+
+CODE "mod",0,mod
+    ret
+
+CODE "um/mod",0,umSlashMod
+    ret
+
+CODE "um+",0,umPlus
     ret
 
