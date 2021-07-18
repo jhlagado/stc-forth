@@ -5,14 +5,14 @@
 - click `Import repo from GitHub` button
 - paste `https://github.com/jhlagado/stc-forth` into the`Enter https GitHub link` text field.
 
-## to run tests
-
-- select the `main-test.z80` file
-- press `Emulator [F10]` button
-
 ## to run app
 
-- select the `main.z80` file
+- select the `MAIN.z80` file
+- press `Emulator [F10]` button
+
+## to run tests
+
+- select the `TEST.z80` file
 - press `Emulator [F10]` button
 
 ## to debug

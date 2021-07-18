@@ -76,12 +76,6 @@ CODE "hold",0,hold
 CODE "invert",0,invert
     ret
 
-CODE "is",0,is
-    ret
-
-CODE "literal",0,literal
-    ret
-
 CODE "move",0,move
     ret
 

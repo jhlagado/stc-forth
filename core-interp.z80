@@ -23,7 +23,8 @@ interpret2:
 
 interpWord:                                 ; str len -- num?
     call twodup                     ; str len str len
-    call find                       ; str len ptrOrNull
+    call findx                       ; str len ptrOrNull
+    call drop
     call dup                        ; str len ptrOrNull ptrOrNull
     call isZero                     ; str len ptrOrNull
     jr z,interpNum
@@ -45,7 +46,8 @@ interpNum2:
 
 compileWord:
     call twodup                     ; str len str len
-    call find                       ; str len ptrOrNull
+    call findx                       ; str len ptrOrNull
+    call drop
     call dup                        ; str len ptrOrNull ptrOrNull
     call isZero                     ; str len ptrOrNull
     jr z,compileNum

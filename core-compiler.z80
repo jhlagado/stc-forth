@@ -69,16 +69,23 @@ CODE ":",0,colon
     call rbrac                              ; go into compile mode.
     ret                                     
 
+; ( -- )
+; immediately enter interpretation state. 
 CODE "[",IMMED,lbrac
 	ld HL, FALSE
 	ld (VAR_STATE), HL	; Set STATE to 0.
     ret
 
+; ( -- )
+; enter compilation state. 
 CODE "]",0,rbrac
 	ld HL, TRUE
 	ld (VAR_STATE), HL	; Set STATE to 1.
     ret
     
+; ( -- )
+; immediately finish definition and leave compilation state.
+; allow defintion to be visible in dictionary
 CODE ";",IMMED,semicolon
     _push RET_OPCODE 
     call ccomma                             ; compile ret
@@ -119,3 +126,65 @@ xdoes:                                      ; --
     call onep
     call store                              ; rewrite with address of body after does>
     ret                                     ; return to caller of caller (terminate caller)
+
+; >body     ( ptr -- ptr' )
+CODE ">body",0,toBody
+getBody:                                        
+    _cellp                              ; skip over backlink
+    _onep                               ; skip over flags
+    call dup
+    call cat
+    _onep                               ; skip over len
+    call plus
+    ret
+
+CODE "'",0,tick
+    call bl
+    call word
+    call findx
+    call drop
+    call isZero
+    ret z
+    _pushString "?" 
+    call abort
+    ret
+
+CODE "[']",IMMED,bracTick
+    call tick               ; get xt of 'xxx'
+    call literal
+    ret
+
+; ( "<spaces>name" -- )
+code "defer",0,defer
+    call create
+    _compile abort
+    call does
+    call at
+    call execute
+    ret
+
+; ( xt2 xt1 -- )
+code "defer!",0,deferstore
+    call toBody
+    call store
+    ret
+
+; ( xt1 -- xt2 )
+code "defer@",0,deferAt
+    call toBody
+    call at
+    ret
+
+; ( xt "<spaces>name" -- )
+CODE "is",IMMED,is
+    _fetch state 
+    call isZero
+    jr z,is1
+    _compile bracTick
+    _push deferStore
+    call comma
+    ret
+is1:
+    _push deferStore
+    ret
+

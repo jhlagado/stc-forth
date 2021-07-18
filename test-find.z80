@@ -3,16 +3,19 @@
     _store base
 
     _pushStr "2/",2
-    call FIND
+    call findx
+    call drop
     expect HEADER_TWOSLASH, "twoSlash"
 
     _pushPStr "#$%"
     _unpackStr
-    call find
+    call findx
+    call drop
     expect 0, "not found: #$%"
 
     _pushPStr "ok"
     _unpackStr
-    call find
+    call findx
+    call drop    
     expect HEADER_ok, "found: ok"
 
