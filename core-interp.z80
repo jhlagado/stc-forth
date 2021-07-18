@@ -3,10 +3,9 @@ repl:
     jp interpret
 
 interpret:
-    _push wordBuf1                  ; str
-    _push $40                       ; str maxlen
     _push $20                       ; str maxlen delim
-    call parseWord                  ; str len
+    call word                       ; c-addr                 
+    call count                      ; str len
     call dup  
     call isZero                     ; str len len
     jr z,interpret2                 ; str len
@@ -21,14 +20,14 @@ interpret1:
 interpret2:
     jp twodrop                      ; cleanup and return
 
-interpWord:                                 ; str len -- num?
+interpWord:                         ; str len -- num?
     call twodup                     ; str len str len
-    call findx                       ; str len ptrOrNull
+    call findx                      ; str len ptrOrNull
     call drop
     call dup                        ; str len ptrOrNull ptrOrNull
     call isZero                     ; str len ptrOrNull
     jr z,interpNum
-    _twonip                     ; ptr
+    _twonip                         ; ptr
 interpWord2:
     call getBody                    ; ptr'
     call execute                    ; ?

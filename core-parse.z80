@@ -1,5 +1,5 @@
+; word ( delim "<chars>ccc<char>" -- c-addr ) 
 ; read a word from input stream
-; char "<chars>ccc<char>" -- c-addr 
 ; Skip leading delimiters. Parse characters ccc delimited by char. 
 CODE "word",0,word
     call tor                                ; save delim
