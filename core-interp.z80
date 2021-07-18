@@ -15,66 +15,54 @@ interpret:
     call compileWord      
     jr interpret
 interpret1:
-    call interpWord                 ; num?
+    call interpWord                 
     jr interpret
 interpret2:
-    jp drop                      ; cleanup and return
-
-interpWord:                         ; str len -- num?
-    call count                      ; str len
-    call twodup                     ; str len str len
-    call findx                      ; str len ptrOrNull
-    call drop
-    call dup                        ; str len ptrOrNull ptrOrNull
-    call isZero                     ; str len ptrOrNull
+    call drop                       
+    ret
+    
+interpWord:                         
+    call dup                        ; c-addr c-addr
+    call find                       ; c-addr xt result
+    call isZero                     ; c-addr xt
     jr z,interpNum
-    _twonip                         ; ptr
-interpWord2:
-    call getBody                    ; ptr'
+    call nip                        ; xt
+executeWord:
     call execute                    ; ?
     ret
 
+compileWord:
+    call dup                        ; c-addr c-addr
+    call find                       ; c-addr xt result
+    call dup                        ; c-addr xt result result
+    call isZero                     ; c-addr xt result
+    jr z,compileNum
+    _onep                           ; c-addr xt result+1 ; is it -1?
+    call isZero                     ; c-addr xt 
+    call nip                        ; xt    
+    jr z,executeWord
+    call callc    
+    ret
+
 interpNum:
-    call drop                       ; str len
+    call drop                       ; c-addr
+    call count                      ; str len
     call toNumber                   ; num err
     call isZero
     ret z
-interpNum2:
+interpError:
     call drop                       ; --
     _printString "NOT FOUND!\r\n"
     ret
 
-compileWord:
-    call count                      ; str len
-    call twodup                     ; str len str len
-    call findx                      ; str len ptrOrNull
-    call drop
-    call dup                        ; str len ptrOrNull ptrOrNull
-    call isZero                     ; str len ptrOrNull
-    jr z,compileNum
-    _twonip                           ; ptr
-    call dup                        ; ptr ptr
-    _cellp                          ; ptr pflags
-    call cat
-    _push IMMED
-    call ANDD
-    call isZero
-    jr nz,interpWord2
-    call getBody                    ; ptr'
-    call callc                      ; compile call
-    ret
-
 compileNum:
-    call drop                       ; str len
+    call drop                       ; c-addr xt 
+    call drop                       ; c-addr
+    call count                      ; str len    
     call toNumber                   ; num err
     call isZero
-    jr z,compileNum2
-    jr interpNum2
-
-compileNum2:
-    _push dolit
-    call callc
-    call comma
+    jr nz,interpError
+    call literal
     ret
     
     
